@@ -15,10 +15,13 @@ module BluesnapRuby
     # @return [BluesnapRuby::Vendor]
     def self.create vendor_data
       attributes = self.attributes - [:vendor_id] # fix attributes allowed by POST API
-      options = parse_options_for_request(attributes, vendor_data)
+      request_body = parse_body_for_request(attributes, vendor_data)
       request_url = URI.parse(BluesnapRuby.api_url).tap { |uri| uri.path = Vendor::ENDPOINT }
-      response = post(request_url, options)
-      new(response)
+      response = post(request_url, request_body)
+      return nil if response.header['location'].nil?
+
+      location = response.header['location']
+      location.split('/').last
     end
 
     # Update a vendor using the API.
@@ -40,11 +43,14 @@ module BluesnapRuby
     # @return [Array<BluesnapRuby::Vendor>]
     # TODO: pagination
     def self.all options = {}
-      request_uri = URI.parse(BluesnapRuby.api_url).tap { |uri| uri.path = Vendor::ENDPOINT }
+      request_url = URI.parse(BluesnapRuby.api_url).tap { |uri| uri.path = Vendor::ENDPOINT }
       params_text = options.map { |k, v| "#{k}=#{ERB::Util.url_encode(v.to_s)}" }.join("\&")
-      request_uri.query = params_text
-      response = get(request_uri)
-      response.map { |item| new(item) }
+      request_url.query = params_text
+      response = get(request_url)
+      response_body = JSON.parse(response.body)
+      return [] if response_body['vendor'].nil?
+
+      response_body['vendor'].map { |item| new(item) }
     end
 
     # Fetches a customer using the API.
@@ -52,9 +58,10 @@ module BluesnapRuby
     # @param [String] vendor_id the Vendor Id
     # @return [BluesnapRuby::Vendor]
     def self.find vendor_id
-      request_uri = URI.parse(BluesnapRuby.api_url).tap { |uri| uri.path = "#{Vendor::ENDPOINT}/#{vendor_id}" }
-      response = get(request_uri)
-      new(response)
+      request_url = URI.parse(BluesnapRuby.api_url).tap { |uri| uri.path = "#{Vendor::ENDPOINT}/#{vendor_id}" }
+      response = get(request_url)
+      response_body = JSON.parse(response.body)
+      new(response_body)
     end
 
     # Update a Vendor using the API.
@@ -64,9 +71,11 @@ module BluesnapRuby
     def update vendor_data
       attributes = self.class.attributes - [:vendor_id]
       options = self.class.parse_options_for_request(attributes, vendor_data)
-      request_uri = URI.parse(BluesnapRuby.api_url).tap { |uri| uri.path = "#{Vendor::ENDPOINT}/#{vendor_id}" }
-      response = self.class.put(request_uri, options)
-      new(response)
+      request_url = URI.parse(BluesnapRuby.api_url).tap { |uri| uri.path = "#{Vendor::ENDPOINT}/#{vendor_id}" }
+      response = self.class.put(request_url, options)
+      response_body = JSON.parse(response.body)
+      assign_attributes(response_body)
+      self
     end
   end
 end

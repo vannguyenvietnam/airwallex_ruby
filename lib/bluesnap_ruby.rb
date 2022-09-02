@@ -1,4 +1,7 @@
 require "bluesnap_ruby/version"
+require "bluesnap_ruby/error"
+require "bluesnap_ruby/base"
+require "bluesnap_ruby/vendor"
 
 module BluesnapRuby
   @@api_url    = 'https://sandbox.bluesnap.com'
@@ -10,8 +13,9 @@ module BluesnapRuby
   end
 
   def self.api_url=(url)
-    url = 'https://' + url unless url.include?('https://')
-    @@api_url = url
+    temp_url = url.to_s
+    temp_url = 'https://' + temp_url unless temp_url.include?('https://')
+    @@api_url = temp_url
   end
 
   def self.password
