@@ -1,68 +1,72 @@
 module BluesnapRuby
   class Vendor < Base
-    attr_accessor :vendorId, :email, :name, :ipnUrl, :firstName, :lastName, :address, :city,
-                  :zip, :country, :phone, :state, :defaultPayoutCurrency, :frequency, :delay,
-                  :vendorPrincipal, :payoutInfo, :vendorAgreement, :verification
+    attr_accessor :vendor_id, :email, :name, :ipn_url, :first_name, :last_name, :address, :city,
+                  :zip, :country, :phone, :state, :default_payout_currency, :frequency, :delay,
+                  :vendor_principal, :payout_info, :vendor_agreement, :verification
 
-    ENDPOINT = '/1/recipients'
+    ENDPOINT = '/services/2/vendors'
 
     # Uses the API to create a vendor.
     #
     # @param [Hash] vendor_data
     # @option vendor_data [String] :email *required*
     # @option vendor_data [String] :country *required*
-    # @option vendor_data [Hash] :payoutInfo 
+    # @option vendor_data [Hash] :payout_info 
     # @return [BluesnapRuby::Vendor]
     def self.create vendor_data
-      attributes = self.attributes - [:vendorId] # fix attributes allowed by POST API
-      options    = parse_options_for_request(attributes, vendor_data)
-      response   = post(URI.parse(BluesnapRuby.api_url).tap{|uri| uri.path = Vendor::ENDPOINT }, options)
-      new(response.delete('token'), response)
+      attributes = self.attributes - [:vendor_id] # fix attributes allowed by POST API
+      options = parse_options_for_request(attributes, vendor_data)
+      request_url = URI.parse(BluesnapRuby.api_url).tap { |uri| uri.path = Vendor::ENDPOINT }
+      response = post(request_url, options)
+      new(response)
     end
 
-    # Update a recipient using the pin API.
+    # Update a vendor using the API.
     #
-    # @param [String] token *required*
-    # @param [String] email *required*
-    # @param [String,PinPayment::BankAccount,Hash] bank_account can be a token, hash or bank account object *required*
-    # @return [PinPayment::Recipient]
-    def self.update token, email, card_or_token = nil
-      new(token).tap{|c| c.update(email, card_or_token) }
+    # @param [String] vendor_id *required*
+    # @param [Hash] vendor_data *required*
+    # @return [BluesnapRuby::Vendor]
+    def self.update vendor_id, vendor_data
+      new(vendor_id: vendor_id).tap { |v| v.update(vendor_data) }
     end
 
-    # Fetches all of your recipients using the pin API.
+    # Fetches all of your Vendors using the API.
     #
-    # @return [Array<PinPayment::Recipient>]
+    # @param [Hash] options
+    # @options [Integer] :pagesize Positive integer. Default is 10 if not set. Maximum is 500.
+    # @options [TrueClass] :gettotal true = Include the number of total results in the response.
+    # @options [Vendor ID] :after Vendor ID. The response will get the page of results after the specified ID (exclusive).
+    # @options [Vendor ID] :before Vendor ID. The response will get the page of results before the specified ID (exclusive).
+    # @return [Array<BluesnapRuby::Vendor>]
     # TODO: pagination
-    def self.all
-      response = get(URI.parse(PinPayment.api_url).tap{|uri| uri.path = Vendor::ENDPOINT })
-      response.map{|x| new(x.delete('token'), x) }
+    def self.all options = {}
+      request_uri = URI.parse(BluesnapRuby.api_url).tap { |uri| uri.path = Vendor::ENDPOINT }
+      params_text = options.map { |k, v| "#{k}=#{ERB::Util.url_encode(v.to_s)}" }.join("\&")
+      request_uri.query = params_text
+      response = get(request_uri)
+      response.map { |item| new(item) }
     end
 
-    # Fetches a customer using the pin API.
+    # Fetches a customer using the API.
     #
-    # @param [String] token the recipient token
-    # @return [PinPayment::Recipient]
-    def self.find token
-      response = get(URI.parse(PinPayment.api_url).tap{|uri| uri.path = "#{Vendor::ENDPOINT}/#{token}" })
-      new(response.delete('token'), response)
+    # @param [String] vendor_id the Vendor Id
+    # @return [BluesnapRuby::Vendor]
+    def self.find vendor_id
+      request_uri = URI.parse(BluesnapRuby.api_url).tap { |uri| uri.path = "#{Vendor::ENDPOINT}/#{vendor_id}" }
+      response = get(request_uri)
+      new(response)
     end
 
-    # Update a recipient using the pin API.
+    # Update a Vendor using the API.
     #
-    # @param [String] email the recipients's new email address
-    # @param [String, PinPayment::BankAccount, Hash] account_or_token the recipient's new bank account details
-    # @return [PinPayment::Customer]
-    def update email, account_or_token = nil
-      attributes = self.class.attributes - [:token, :created_at]
-      options    = self.class.parse_options_for_request(attributes, email: email, bank_account: account_or_token)
-      response   = self.class.put(URI.parse(PinPayment.api_url).tap{|uri| uri.path = "#{Vendor::ENDPOINT}/#{token}" }, options)
-      self.email = response['email']
-      self.bank_account  = response['bank_account']
-      self
+    # @param [Hash] vendor_data
+    # @return [BluesnapRuby::Vendor]
+    def update vendor_data
+      attributes = self.class.attributes - [:vendor_id]
+      options = self.class.parse_options_for_request(attributes, vendor_data)
+      request_uri = URI.parse(BluesnapRuby.api_url).tap { |uri| uri.path = "#{Vendor::ENDPOINT}/#{vendor_id}" }
+      response = self.class.put(request_uri, options)
+      new(response)
     end
-
-
-    private
   end
 end

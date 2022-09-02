@@ -5,10 +5,8 @@ require 'net/http'
 module BluesnapRuby
   class Base
 
-    def initialize token, options = {}
-      self.token = token
-
-      self.class.parse_card_data(options).each do |k, v| 
+    def initialize options = {}
+      self.class.parse_data(options).each do |k, v| 
         send("#{k}=", v) if self.class.attributes.include?(k.to_sym) 
       end
     end
@@ -74,116 +72,30 @@ module BluesnapRuby
       response.is_a?(Hash) ? parse_object_tokens(response) : response.map{|x| parse_object_tokens(x) }
     end
 
-    def self.parse_card_data hash
-      hash  = hash.dup
-      card  = hash.delete('card') if hash['card']
-      card  = hash.delete(:card)  if hash[:card]
-      token = hash.delete('card_token') if hash['card_token']
-      token = hash.delete(:card_token)  if hash[:card_token]
+    def self.deep_snake_case_keys(hash)
+      temp_hash = hash.dup
+      return temp_hash unless temp_hash.is_a?(Hash)
+      return temp_hash if temp_hash.blank?
 
-      if card.is_a?(Card) && token && !card.token
-        card.token = token
-      elsif card.is_a?(Hash)
-        card = Card.new(token || card[:token] || card['token'], card)
-      elsif card.is_a?(String)
-        card = Card.new(card)
-      elsif token
-        card = Card.new(token)
-      end
-
-      hash['card'] = card if card
-      hash
+      temp_hash.deep_transform_keys { |key| key.to_s.underscore.to_sym }
     end
 
-    def self.parse_customer_data hash
-      hash     = hash.dup
-      customer = hash.delete('customer') if hash['customer']
-      customer = hash.delete(:customer)  if hash[:customer]
-      token    = hash.delete('customer_token') if hash['customer_token']
-      token    = hash.delete(:customer_token)  if hash[:customer_token]
+    def self.deep_camelize_keys(hash)
+      temp_hash = hash.dup
+      return temp_hash unless temp_hash.is_a?(Hash)
+      return temp_hash if temp_hash.blank?
 
-      if customer.is_a?(Customer) and token and !customer.token
-        customer.token = token
-      elsif customer.is_a?(String)
-        customer = Customer.new(customer)
-      elsif token
-        customer = Customer.new(token)
-      end
-
-      hash['customer'] = customer if customer
-      hash
+      temp_hash.deep_transform_keys { |key| key.to_s.camelize.to_sym }
     end
 
-    def self.parse_charge_data hash
-      hash   = hash.dup
-      charge = hash.delete('charge') if hash['charge']
-      charge = hash.delete(:charge)  if hash[:charge]
-      token  = hash.delete('charge_token') if hash['charge_token']
-      token  = hash.delete(:charge_token)  if hash[:charge_token]
-
-      if charge.is_a?(Charge) and token and !charge.token
-        charge.token = token
-      elsif charge.is_a?(String)
-        charge = Charge.new(charge)
-      elsif token
-        charge = Charge.new(token)
-      end
-
-      hash['charge'] = charge if charge
-      hash
-    end
-
-    def self.parse_bank_account_data hash
-      hash      = hash.dup
-      account   = hash.delete('bank_account')  if hash['bank_account']
-      account   = hash.delete(:bank_account)   if hash[:bank_account]
-      token     = hash.delete('bank_account_token')  if hash['bank_account_token']
-      token     = hash.delete(:bank_account_token)   if hash[:bank_account_token]
-
-      if account.is_a?(BankAccount) and token and !account.token
-        account.token = token
-      elsif account.is_a?(String)
-        account = BankAccount.new(account)
-      elsif account.is_a?(Hash)
-        account = BankAccount.new(nil,account)
-      elsif token
-        account = BankAccount.new(token)
-      end
-
-      hash['bank_account'] = account if account
-      hash
-    end
-
-    def self.parse_object_tokens hash
-      parse_charge_data(parse_customer_data(parse_card_data(parse_bank_account_data(hash))))
+    def self.parse_data hash
+      deep_snake_case_keys(hash)
     end
 
     def self.parse_options_for_request attributes, options
       attributes = attributes.map(&:to_s)
-      options    = parse_object_tokens(options.select{|k| attributes.include?(k.to_s) })
-
-      if card = options.delete('card')
-        if card.token
-          options['card_token'] = card.token
-        else
-          # Ruby's Net::HTTP#set_form_data doesn't deal with nested hashes :(
-          card.to_hash.each{|k,v| options["card[#{k}]"] = v }
-        end
-      end
-
-      if bank_account = options.delete('bank_account')
-        if bank_account.token
-          options['bank_account_token'] = bank_account.token
-        else
-          # Ruby's Net::HTTP#set_form_data doesn't deal with nested hashes :(
-          bank_account.to_hash.each{|k,v| options["bank_account[#{k}]"] = v }
-        end
-      end
-
-      options['customer_token'] = options.delete('customer').token if options['customer']
-      options['charge_token']   = options.delete('charge').token   if options['charge']
-
-      options
+      temp_options = options.select { |k, _| attributes.include?(k.to_s) }
+      deep_camelize_keys(temp_options)
     end
 
   end
