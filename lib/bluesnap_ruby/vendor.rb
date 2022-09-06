@@ -74,8 +74,7 @@ module BluesnapRuby
       options = self.class.parse_body_for_request(attributes, vendor_data)
       request_url = URI.parse(BluesnapRuby.api_url).tap { |uri| uri.path = "#{Vendor::ENDPOINT}/#{vendor_id}" }
       response = self.class.put(request_url, options)
-      # response.code.to_s == '204'
-      response
+      response.code.to_s == '204'
     end
   end
 end
