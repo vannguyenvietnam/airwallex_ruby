@@ -60,6 +60,8 @@ module BluesnapRuby
           http.body = JSON.dump(request_boby)
         end
       )
+      
+      return response if response.body.blank?
 
       begin
         response_body = JSON.parse(response.body)
@@ -67,8 +69,8 @@ module BluesnapRuby
         raise Error::InvalidResponse.new(e.message)
       end
 
-      if response_body['error']
-        raise(Error.create(response_body['error'], response_body['error_description'], response_body['messages'])) 
+      if response_body['message']
+        raise(Error.create(response_body['message'], response_body['message'], response_body['message'])) 
       end
 
       response
@@ -87,7 +89,11 @@ module BluesnapRuby
       return temp_hash unless temp_hash.is_a?(Hash)
       return temp_hash if temp_hash.blank?
 
-      temp_hash.deep_transform_keys { |key| key.to_s.camelize.to_sym }
+      temp_hash.deep_transform_keys do |key| 
+        temp = key.to_s.camelize.to_s
+        temp[0] = temp[0].downcase
+        temp.to_sym 
+      end
     end
 
     def self.parse_data hash
