@@ -10,7 +10,7 @@ module BluesnapRuby
       end
 
       if messages.is_a?(Array)
-        description = description + ' ' + messages.map{|x| "(#{x['message']})" }.join(' & ')
+        description = description + ' ' + messages.map{|x| "(#{x['description']})" }.join(' & ')
       elsif messages.is_a?(Hash)
         description = description + ' ' + messages.values.flatten.map{|x| "(#{x})" }.join(' & ')
       end

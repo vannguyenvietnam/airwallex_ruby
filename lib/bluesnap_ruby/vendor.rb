@@ -30,7 +30,8 @@ module BluesnapRuby
     # @param [Hash] vendor_data *required*
     # @return [BluesnapRuby::Vendor]
     def self.update vendor_id, vendor_data
-      new(vendor_id: vendor_id).tap { |v| v.update(vendor_data) }
+      temp_vendor = new(vendor_id: vendor_id)
+      temp_vendor.update(vendor_data)
     end
 
     # Fetches all of your Vendors using the API.
@@ -70,12 +71,11 @@ module BluesnapRuby
     # @return [BluesnapRuby::Vendor]
     def update vendor_data
       attributes = self.class.attributes - [:vendor_id]
-      options = self.class.parse_options_for_request(attributes, vendor_data)
+      options = self.class.parse_body_for_request(attributes, vendor_data)
       request_url = URI.parse(BluesnapRuby.api_url).tap { |uri| uri.path = "#{Vendor::ENDPOINT}/#{vendor_id}" }
       response = self.class.put(request_url, options)
-      response_body = JSON.parse(response.body)
-      assign_attributes(response_body)
-      self
+      # response.code.to_s == '204'
+      response
     end
   end
 end
