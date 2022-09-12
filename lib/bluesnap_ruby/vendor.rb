@@ -42,7 +42,6 @@ module BluesnapRuby
     # @options [Vendor ID] :after Vendor ID. The response will get the page of results after the specified ID (exclusive).
     # @options [Vendor ID] :before Vendor ID. The response will get the page of results before the specified ID (exclusive).
     # @return [Array<BluesnapRuby::Vendor>]
-    # TODO: pagination
     def self.all options = {}
       request_url = URI.parse(BluesnapRuby.api_url).tap { |uri| uri.path = Vendor::ENDPOINT }
       params_text = options.map { |k, v| "#{k}=#{ERB::Util.url_encode(v.to_s)}" }.join("\&")
@@ -54,7 +53,7 @@ module BluesnapRuby
       response_body['vendor'].map { |item| new(item) }
     end
 
-    # Fetches a customer using the API.
+    # Fetches a vendor using the API.
     #
     # @param [String] vendor_id the Vendor Id
     # @return [BluesnapRuby::Vendor]
