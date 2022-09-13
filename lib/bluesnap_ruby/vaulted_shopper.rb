@@ -36,10 +36,13 @@ module BluesnapRuby
     # Fetches a Shopper using the API.
     #
     # @param [String] vaulted_shopper_id the Shopper Id
+    # @param [Hash] options
+    # @options [TrueClass] :using_merchant_id Delete shopper using merchant shopper id.
     # @return [BluesnapRuby::VaultedShopper]
-    def self.find vaulted_shopper_id
+    def self.find vaulted_shopper_id, options = {}
       request_url = URI.parse(BluesnapRuby.api_url).tap do |uri| 
-        uri.path = "#{Vendor::ENDPOINT}/#{vaulted_shopper_id}" 
+        uri.path = "#{Vendor::ENDPOINT}/#{vaulted_shopper_id}"
+        uri.path = "#{Vendor::ENDPOINT}/merchant/#{vaulted_shopper_id}" if options[:using_merchant_id]
       end
 
       response = get(request_url)
@@ -50,10 +53,13 @@ module BluesnapRuby
     # Delete a Shopper using the API.
     #
     # @param [String] vaulted_shopper_id the Shopper Id
+    # @param [Hash] options
+    # @options [TrueClass] :using_merchant_id Delete shopper using merchant shopper id.
     # @return [BluesnapRuby::VaultedShopper]
-    def self.delete vaulted_shopper_id
+    def self.delete vaulted_shopper_id, options = {}
       request_url = URI.parse(BluesnapRuby.api_url).tap do |uri| 
         uri.path = "#{Vendor::ENDPOINT}/#{vaulted_shopper_id}" 
+        uri.path = "#{Vendor::ENDPOINT}/merchant/#{vaulted_shopper_id}" if options[:using_merchant_id]
       end
 
       response = delete(request_url)
