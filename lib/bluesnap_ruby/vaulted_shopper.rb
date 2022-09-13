@@ -77,7 +77,9 @@ module BluesnapRuby
       end
 
       response = self.class.put(request_url, options)
-      response.code.to_s == '204'
+      response_body = JSON.parse(response.body)
+      assign_attributes(response_body)
+      self
     end
   end
 end
