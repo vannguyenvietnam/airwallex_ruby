@@ -17,10 +17,8 @@ module BluesnapRuby
       request_body = parse_body_for_request(attributes, shopper_data)
       request_url = URI.parse(BluesnapRuby.api_url).tap { |uri| uri.path = Vendor::ENDPOINT }
       response = post(request_url, request_body)
-      return nil if response.header['location'].nil?
-
-      location = response.header['location']
-      location.split('/').last
+      response_body = JSON.parse(response.body)
+      new(response_body)
     end
 
     # Update a shopper using the API.
