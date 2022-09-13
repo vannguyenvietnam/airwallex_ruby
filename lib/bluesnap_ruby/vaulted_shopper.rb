@@ -33,25 +33,6 @@ module BluesnapRuby
       temp_shopper.update(shopper_data)
     end
 
-    # Fetches all of your shoppers using the API.
-    #
-    # @param [Hash] options
-    # @options [Integer] :pagesize Positive integer. Default is 10 if not set. Maximum is 500.
-    # @options [TrueClass] :gettotal true = Include the number of total results in the response.
-    # @options [Shopper ID] :after Shopper ID. The response will get the page of results after the specified ID (exclusive).
-    # @options [Shopper ID] :before Shopper ID. The response will get the page of results before the specified ID (exclusive).
-    # @return [Array<BluesnapRuby::VaultedShopper>]
-    def self.all options = {}
-      request_url = URI.parse(BluesnapRuby.api_url).tap { |uri| uri.path = Vendor::ENDPOINT }
-      params_text = options.map { |k, v| "#{k}=#{ERB::Util.url_encode(v.to_s)}" }.join("\&")
-      request_url.query = params_text
-      response = get(request_url)
-      response_body = JSON.parse(response.body)
-      return [] if response_body['shopper'].nil?
-
-      response_body['shopper'].map { |item| new(item) }
-    end
-
     # Fetches a Shopper using the API.
     #
     # @param [String] vaulted_shopper_id the Shopper Id
@@ -64,6 +45,19 @@ module BluesnapRuby
       response = get(request_url)
       response_body = JSON.parse(response.body)
       new(response_body)
+    end
+
+    # Delete a Shopper using the API.
+    #
+    # @param [String] vaulted_shopper_id the Shopper Id
+    # @return [BluesnapRuby::VaultedShopper]
+    def self.delete vaulted_shopper_id
+      request_url = URI.parse(BluesnapRuby.api_url).tap do |uri| 
+        uri.path = "#{Vendor::ENDPOINT}/#{vaulted_shopper_id}" 
+      end
+
+      response = delete(request_url)
+      response.code.to_s == '200'
     end
 
     # Update a Shopper using the API.
