@@ -15,7 +15,7 @@ module BluesnapRuby
     def self.create shopper_data
       attributes = self.attributes - [:vaulted_shopper_id] # fix attributes allowed by POST API
       request_body = parse_body_for_request(attributes, shopper_data)
-      request_url = URI.parse(BluesnapRuby.api_url).tap { |uri| uri.path = Vendor::ENDPOINT }
+      request_url = URI.parse(BluesnapRuby.api_url).tap { |uri| uri.path = ENDPOINT }
       response = post(request_url, request_body)
       response_body = JSON.parse(response.body)
       new(response_body)
@@ -39,8 +39,8 @@ module BluesnapRuby
     # @return [BluesnapRuby::VaultedShopper]
     def self.find vaulted_shopper_id, options = {}
       request_url = URI.parse(BluesnapRuby.api_url).tap do |uri| 
-        uri.path = "#{Vendor::ENDPOINT}/#{vaulted_shopper_id}"
-        uri.path = "#{Vendor::ENDPOINT}/merchant/#{vaulted_shopper_id}" if options[:using_merchant_id]
+        uri.path = "#{ENDPOINT}/#{vaulted_shopper_id}"
+        uri.path = "#{ENDPOINT}/merchant/#{vaulted_shopper_id}" if options[:using_merchant_id]
       end
 
       response = get(request_url)
@@ -56,8 +56,8 @@ module BluesnapRuby
     # @return [BluesnapRuby::VaultedShopper]
     def self.delete vaulted_shopper_id, options = {}
       request_url = URI.parse(BluesnapRuby.api_url).tap do |uri| 
-        uri.path = "#{Vendor::ENDPOINT}/#{vaulted_shopper_id}" 
-        uri.path = "#{Vendor::ENDPOINT}/merchant/#{vaulted_shopper_id}" if options[:using_merchant_id]
+        uri.path = "#{ENDPOINT}/#{vaulted_shopper_id}" 
+        uri.path = "#{ENDPOINT}/merchant/#{vaulted_shopper_id}" if options[:using_merchant_id]
       end
 
       response = delete(request_url)
@@ -73,7 +73,7 @@ module BluesnapRuby
       options = self.class.parse_body_for_request(attributes, shopper_data)
 
       request_url = URI.parse(BluesnapRuby.api_url).tap do |uri| 
-        uri.path = "#{Vendor::ENDPOINT}/#{vaulted_shopper_id}" 
+        uri.path = "#{ENDPOINT}/#{vaulted_shopper_id}" 
       end
 
       response = self.class.put(request_url, options)
