@@ -3,6 +3,7 @@ require "bluesnap_ruby/error"
 require "bluesnap_ruby/base"
 require "bluesnap_ruby/vendor"
 require "bluesnap_ruby/vaulted_shopper"
+require "bluesnap_ruby/transaction"
 
 module BluesnapRuby
   @@api_url    = 'https://sandbox.bluesnap.com'
