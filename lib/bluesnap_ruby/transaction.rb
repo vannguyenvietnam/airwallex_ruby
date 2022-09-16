@@ -48,11 +48,11 @@ module BluesnapRuby
     # @return [BluesnapRuby::Transaction]
     def self.update transaction_id, transaction_data
       transaction_data[:transaction_id] = transaction_id
-      attributes = self.class.attributes
-      request_body = self.class.parse_body_for_request(attributes, transaction_data)
+      attributes = self.attributes
+      request_body = parse_body_for_request(attributes, transaction_data)
       request_url = URI.parse(BluesnapRuby.api_url).tap { |uri| uri.path = ENDPOINT }
       # Send request
-      response = self.class.put(request_url, request_body)
+      response = put(request_url, request_body)
       response_body = JSON.parse(response.body)
       new(response_body)
     end
