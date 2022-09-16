@@ -1,10 +1,10 @@
 module BluesnapRuby
   class Transaction < Base
-    attr_accessor :transaction_id, :wallet_id, :wallet, :amount, :usd_amount, :vaulted_shopper_id, 
-                  :merchant_transaction_id, :soft_descriptor, :descriptor_phone_number, 
-                  :tax_reference, :vendors_info, :card_holder_info, :currency, 
-                  :transaction_fraud_info, :credit_card, :card_transaction_type, :three_d_secure, 
-                  :transaction_meta_data, :pf_token, :level3_data, :store_card, 
+    attr_accessor :transaction_id, :wallet_id, :wallet, :amount, :usd_amount, :open_to_capture, 
+                  :vaulted_shopper_id, :merchant_transaction_id, :soft_descriptor, 
+                  :descriptor_phone_number, :tax_reference, :vendors_info, :card_holder_info, 
+                  :currency, :transaction_fraud_info, :credit_card, :card_transaction_type, 
+                  :three_d_secure, :transaction_meta_data, :pf_token, :level3_data, :store_card, 
                   :network_transaction_info, :transaction_order_source, :transaction_initiator,
                   :transaction_approval_date, :transaction_approval_time
 
@@ -49,10 +49,10 @@ module BluesnapRuby
     def self.update transaction_id, transaction_data
       transaction_data[:transaction_id] = transaction_id
       attributes = self.class.attributes
-      options = self.class.parse_body_for_request(attributes, transaction_data)
+      request_body = self.class.parse_body_for_request(attributes, transaction_data)
       request_url = URI.parse(BluesnapRuby.api_url).tap { |uri| uri.path = ENDPOINT }
       # Send request
-      response = self.class.put(request_url, options)
+      response = self.class.put(request_url, request_body)
       response_body = JSON.parse(response.body)
       new(response_body)
     end
@@ -67,7 +67,7 @@ module BluesnapRuby
       update(transaction_id, transaction_data)
     end
 
-     # Auth reversal a Transaction using the API.
+    # Auth reversal a Transaction using the API.
     #
     # @param [String] transaction_id the Transaction Id or merchant_transaction_id
     # @param [Hash] options
