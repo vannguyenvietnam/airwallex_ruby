@@ -4,7 +4,7 @@ module BluesnapRuby
                   :tax_reference, :vendors_info, :payer_info, :vaulted_shopper_id, :pf_token,
                   :ecp_transaction, :authorized_by_shopper, :transaction_meta_data, :transaction_fraud_info, 
                   :processing_info, :fraudResult_info, :transaction_approval_date, 
-                  :transaction_approval_time, :refunds
+                  :transaction_approval_time, :refunds, :transaction_order_source
 
     ENDPOINT = '/services/2/alt-transactions'
 
