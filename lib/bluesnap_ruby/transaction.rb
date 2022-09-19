@@ -62,7 +62,7 @@ module BluesnapRuby
     # @param [String] transaction_id *required*
     # @param [Hash] transaction_data *required*
     # @return [BluesnapRuby::Transaction]
-    def self.capture transaction_id, transaction_data
+    def self.capture transaction_id, transaction_data = {}
       transaction_data[:card_transaction_type] = 'CAPTURE'
       update(transaction_id, transaction_data)
     end
