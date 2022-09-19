@@ -6,7 +6,8 @@ module BluesnapRuby
                   :currency, :transaction_fraud_info, :credit_card, :card_transaction_type, 
                   :three_d_secure, :transaction_meta_data, :pf_token, :level3_data, :store_card, 
                   :network_transaction_info, :transaction_order_source, :transaction_initiator,
-                  :transaction_approval_date, :transaction_approval_time
+                  :transaction_approval_date, :transaction_approval_time, :processing_info,
+                  :fraud_result_info, :refunds
 
     ENDPOINT = '/services/2/transactions'
 
