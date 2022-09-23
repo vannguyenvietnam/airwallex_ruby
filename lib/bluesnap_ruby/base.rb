@@ -57,6 +57,7 @@ module BluesnapRuby
           http["Authorization"] = "Basic #{base_key}"
           http["Content-Type"] = "application/json"
           http["Accept"] = "application/json"
+          http["bluesnap-version"] = BluesnapRuby.version
           http.body = JSON.dump(request_boby)
         end
       )

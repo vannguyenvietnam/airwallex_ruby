@@ -10,6 +10,7 @@ module BluesnapRuby
   @@api_url    = 'https://sandbox.bluesnap.com'
   @@password = nil
   @@username = nil
+  @@version = nil
 
   def self.api_url
     @@api_url
@@ -35,5 +36,13 @@ module BluesnapRuby
 
   def self.username=(value)
     @@username = value
+  end
+
+  def self.version
+    @@version
+  end
+
+  def self.version=(value)
+    @@version = value
   end
 end
