@@ -57,7 +57,7 @@ module BluesnapRuby
           http["Authorization"] = "Basic #{base_key}"
           http["Content-Type"] = "application/json"
           http["Accept"] = "application/json"
-          http["bluesnap-version"] = BluesnapRuby.version
+          http["bluesnap-version"] = BluesnapRuby.version if BluesnapRuby.version.present?
           http.body = JSON.dump(request_boby)
         end
       )
@@ -69,6 +69,8 @@ module BluesnapRuby
       rescue JSON::ParserError => e
         raise Error::InvalidResponse.new(e.message)
       end
+
+      raise Error.new(response_body) unless response_body.is_a?(Hash)
 
       if response_body['message']
         message = response_body['message'].first
