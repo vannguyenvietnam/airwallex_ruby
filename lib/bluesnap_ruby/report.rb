@@ -1,6 +1,6 @@
 module BluesnapRuby
   class Report < Base
-    attr_accessor :data, :title, :params, :date_range
+    attr_accessor :data, :title, :params, :date_range, :next_page_token, :start_row, :total_row_count
 
     ENDPOINT = '/services/2/report'
 
@@ -45,6 +45,9 @@ module BluesnapRuby
       request_url.query = params_text
       response = get(request_url)
       response_body = JSON.parse(response.body)
+      response_body[:next_page_token] = response.header['next-page-token']
+      response_body[:start_row] = response.header['start-row']
+      response_body[:total_row_count] = response.header['total-row-count']
       new(response_body)
     end
 
