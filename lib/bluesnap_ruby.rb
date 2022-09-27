@@ -5,6 +5,7 @@ require "bluesnap_ruby/vendor"
 require "bluesnap_ruby/vaulted_shopper"
 require "bluesnap_ruby/transaction"
 require "bluesnap_ruby/alt_transaction"
+require "bluesnap_ruby/refund"
 require "bluesnap_ruby/report"
 
 module BluesnapRuby
