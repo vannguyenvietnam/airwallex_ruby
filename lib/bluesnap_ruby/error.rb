@@ -1,27 +1,23 @@
 module BluesnapRuby
   class Error < StandardError
-
-    def self.create type, description, messages = nil
-      klass = case type
-        when 'token_already_used'; TokenAlreadyUsed
-        when 'invalid_resource';   InvalidResource
-        when 'resource_not_found'; ResourceNotFound
-        else self
-      end
-
+    def self.create description, messages = nil
       if messages.is_a?(Array)
-        description = description + ' ' + messages.map{|x| "(#{x['description']})" }.join(' & ')
+        temp_messages = messages.map do |item| 
+          result = item.to_s
+          
+          if item.is_a?(Hash)
+            result = "(#{item['errorName'].to_s.downcase} #{item['code']} - #{item['description']})"
+          end
+          
+          result
+        end
+
+        description = description + ' ' + temp_messages.join(' & ')
       elsif messages.is_a?(Hash)
-        description = description + ' ' + messages.values.flatten.map{|x| "(#{x})" }.join(' & ')
+        description = { description: description, messages: messages }
       end
       
-      klass.new(description)
+      new(description)
     end
-
-    class InvalidResponse  < Error; end
-    class InvalidResource  < Error; end
-    class ResourceNotFound < Error; end
-    class TokenAlreadyUsed < Error; end
-
   end
 end
