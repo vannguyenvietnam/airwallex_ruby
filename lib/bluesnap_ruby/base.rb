@@ -74,7 +74,7 @@ module BluesnapRuby
 
       if response_body['message']
         message = response_body['message'].first
-        raise(Error.create(message['description'], response_body['message']))
+        raise(Error.create(message['description'], response_body))
       end
 
       response

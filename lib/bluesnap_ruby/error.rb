@@ -1,23 +1,29 @@
 module BluesnapRuby
   class Error < StandardError
-    def self.create description, messages = nil
-      if messages.is_a?(Array)
-        temp_messages = messages.map do |item| 
-          result = item.to_s
-          
-          if item.is_a?(Hash)
-            result = "(#{item['errorName'].to_s.downcase} #{item['code']} - #{item['description']})"
-          end
-          
-          result
-        end
+    attr_reader :error
+    attr_reader :response_body
 
-        description = description + ' ' + temp_messages.join(' & ')
-      elsif messages.is_a?(Hash)
-        description = { description: description, messages: messages }
-      end
-      
-      new(description)
+    def initialize(options = {})
+      @error = options[:error]
+      @response_body = options[:response_body]
+      super(options.to_json)
+    end
+
+    def self.create description, response_body = nil
+      attrs = { error: description, response_body: response_body }
+      new(attrs)
+    end
+
+    def message
+      @error.to_s
+    end
+
+    def full_message
+      @error.to_s + ' ' + @response_body.to_s
+    end
+
+    def response_body
+      @response_body
     end
   end
 end
