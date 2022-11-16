@@ -26,4 +26,6 @@ module BluesnapRuby
       @response_body
     end
   end
+
+  class InvalidResponse  < Error; end
 end
