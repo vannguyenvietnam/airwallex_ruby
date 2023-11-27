@@ -1,8 +1,9 @@
 module BluesnapRuby
   class Vendor < Base
-    attr_accessor :vendor_id, :email, :name, :ipn_url, :first_name, :last_name, :address, :city,
-                  :zip, :country, :phone, :state, :default_payout_currency, :frequency, :delay,
-                  :vendor_principal, :payout_info, :vendor_agreement, :verification
+    attr_accessor :vendor_id, :email, :name, :first_name, :last_name, :phone, :address,
+                  :city, :country, :state, :zip, :tax_id, :vat_id, :vendor_url, :ipn_url, 
+                  :default_payout_currency, :frequency, :delay, :vendor_principal,
+                  :vendor_agreement, :payout_info, :verification
 
     ENDPOINT = '/services/2/vendors'
 
