@@ -72,9 +72,15 @@ module BluesnapRuby
 
       raise Error.new(response_body) unless response_body.is_a?(Hash)
 
-      if response_body['message']
+      if response_body['message'].is_a?(Array)
         message = response_body['message'].first
+        message = {} unless message.is_a?(Hash)
         raise(Error.create(message['description'], response_body))
+      end
+
+      if response_body['message']
+        message = response_body['message'].to_s
+        raise(Error.create(message, response_body))
       end
 
       response
