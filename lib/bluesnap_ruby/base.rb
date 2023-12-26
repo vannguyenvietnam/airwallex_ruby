@@ -74,8 +74,9 @@ module BluesnapRuby
 
       if response_body['message'].is_a?(Array)
         message = response_body['message'].first
-        message = {} unless message.is_a?(Hash)
-        raise(Error.create(message['description'], response_body))
+        description = message.to_s
+        description = message['description'] if message.is_a?(Hash)
+        raise(Error.create(description, response_body))
       end
 
       if response_body['message']
