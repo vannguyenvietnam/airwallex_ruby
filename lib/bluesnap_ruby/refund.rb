@@ -4,6 +4,7 @@ module BluesnapRuby
                   :vendors_refund_info, :transaction_meta_data
 
     ENDPOINT = '/services/2/transactions/refund'
+    ENDPOINT_PENDING = '/services/2/transactions/pending-refund'
 
     # Uses the API to create a refund for a Transaction.
     #
@@ -18,6 +19,20 @@ module BluesnapRuby
       response = post(request_url)
       response_body = JSON.parse(response.body)
       new(response_body)
+    end
+
+    # Uses the API to cancel a pending refund for a Transaction.
+    #
+    # @param [String] transaction_id
+    # @return [BluesnapRuby::Refund]
+    def self.cancel_pending_refund transaction_id, options = {}
+      request_url = URI.parse(BluesnapRuby.api_url).tap do |uri| 
+        uri.path = "#{ENDPOINT_PENDING}/#{transaction_id}"
+        uri.path = "#{ENDPOINT_PENDING}/merchant/#{transaction_id}" if options[:using_merchant_id]
+      end
+
+      response = delete(request_url)
+      response.code == 200
     end
   end
 end
