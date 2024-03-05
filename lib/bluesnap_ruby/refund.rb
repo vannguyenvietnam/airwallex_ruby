@@ -32,7 +32,7 @@ module BluesnapRuby
       end
 
       response = delete(request_url)
-      response.code == 200
+      response.code.to_i == 200
     end
   end
 end
