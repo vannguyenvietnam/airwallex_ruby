@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["bichvannguyenvnn@gmail.com"]
 
   spec.summary       = "Ruby bindings for the BlueSnap API"
-  spec.description   = "Pin is the easiest way to accept payments online.  See https://home.bluesnap.com/ for details."
+  spec.description   = "BlueSnap is the easiest way to accept payments online. See https://home.bluesnap.com/ for details."
   spec.homepage      = "https://github.com/vannguyenvietnam/bluesnap_ruby.git"
   spec.license       = "MIT"
 
