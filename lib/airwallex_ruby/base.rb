@@ -1,8 +1,8 @@
 require 'json'
-require 'bluesnap_ruby/error'
+require 'airwallex_ruby/error'
 require 'net/http'
 
-module BluesnapRuby
+module AirwallexRuby
   class Base
     def assign_attributes options = {}
       self.class.parse_data(options).each do |k, v| 
@@ -53,11 +53,11 @@ module BluesnapRuby
 
       response           = client.request(
         klass.new(uri).tap do |http|
-          base_key = Base64.strict_encode64("#{BluesnapRuby.username}:#{BluesnapRuby.password}")
+          base_key = Base64.strict_encode64("#{AirwallexRuby.username}:#{AirwallexRuby.password}")
           http["Authorization"] = "Basic #{base_key}"
           http["Content-Type"] = "application/json"
           http["Accept"] = "application/json"
-          http["bluesnap-version"] = BluesnapRuby.version if BluesnapRuby.version.present?
+          http["airwallex-version"] = AirwallexRuby.version if AirwallexRuby.version.present?
           http.body = JSON.dump(request_boby)
         end
       )

@@ -1,4 +1,4 @@
-module BluesnapRuby
+module AirwallexRuby
   class Refund < Base
     attr_accessor :refund_transaction_id, :amount, :tax_amount, :reason, :cancel_subscriptions,
                   :vendors_refund_info, :transaction_meta_data
@@ -8,10 +8,10 @@ module BluesnapRuby
 
     # Uses the API to create a refund for a Transaction.
     #
-    # @param [Hash] refund_data - Details here https://developers.bluesnap.com/v8976-JSON/reference/refund
-    # @return [BluesnapRuby::Refund]
+    # @param [Hash] refund_data - Details here https://developers.airwallex.com/v8976-JSON/reference/refund
+    # @return [AirwallexRuby::Refund]
     def self.create transaction_id, refund_data, options = {}
-      request_url = URI.parse(BluesnapRuby.api_url).tap do |uri| 
+      request_url = URI.parse(AirwallexRuby.api_url).tap do |uri| 
         uri.path = "#{ENDPOINT}/#{transaction_id}"
         uri.path = "#{ENDPOINT}/merchant/#{transaction_id}" if options[:using_merchant_id]
       end
@@ -24,9 +24,9 @@ module BluesnapRuby
     # Uses the API to cancel a pending refund for a Transaction.
     #
     # @param [String] transaction_id
-    # @return [BluesnapRuby::Refund]
+    # @return [AirwallexRuby::Refund]
     def self.cancel_pending_refund transaction_id, options = {}
-      request_url = URI.parse(BluesnapRuby.api_url).tap do |uri| 
+      request_url = URI.parse(AirwallexRuby.api_url).tap do |uri| 
         uri.path = "#{ENDPOINT_PENDING}/#{transaction_id}"
         uri.path = "#{ENDPOINT_PENDING}/merchant/#{transaction_id}" if options[:using_merchant_id]
       end

@@ -1,4 +1,4 @@
-module BluesnapRuby
+module AirwallexRuby
   class VaultedShopper < Base
     attr_accessor :vaulted_shopper_id, :payment_sources, :first_name, :last_name, :soft_descriptor, 
                   :descriptor_phone_number, :merchant_shopper_id, :country, :state, :city, :address,
@@ -11,11 +11,11 @@ module BluesnapRuby
     # Uses the API to create a shopper.
     #
     # @param [Hash] shopper_data
-    # @return [BluesnapRuby::VaultedShopper]
+    # @return [AirwallexRuby::VaultedShopper]
     def self.create shopper_data
       attributes = self.attributes - [:vaulted_shopper_id] # fix attributes allowed by POST API
       request_body = parse_body_for_request(attributes, shopper_data)
-      request_url = URI.parse(BluesnapRuby.api_url).tap { |uri| uri.path = ENDPOINT }
+      request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path = ENDPOINT }
       response = post(request_url, request_body)
       response_body = JSON.parse(response.body)
       new(response_body)
@@ -25,7 +25,7 @@ module BluesnapRuby
     #
     # @param [String] vaulted_shopper_id *required*
     # @param [Hash] shopper_data *required*
-    # @return [BluesnapRuby::VaultedShopper]
+    # @return [AirwallexRuby::VaultedShopper]
     def self.update vaulted_shopper_id, shopper_data
       temp_shopper = new(vaulted_shopper_id: vaulted_shopper_id)
       temp_shopper.update(shopper_data)
@@ -36,9 +36,9 @@ module BluesnapRuby
     # @param [String] vaulted_shopper_id the Shopper Id
     # @param [Hash] options
     # @options [TrueClass] :using_merchant_id Delete shopper using merchant shopper id.
-    # @return [BluesnapRuby::VaultedShopper]
+    # @return [AirwallexRuby::VaultedShopper]
     def self.find vaulted_shopper_id, options = {}
-      request_url = URI.parse(BluesnapRuby.api_url).tap do |uri| 
+      request_url = URI.parse(AirwallexRuby.api_url).tap do |uri| 
         uri.path = "#{ENDPOINT}/#{vaulted_shopper_id}"
         uri.path = "#{ENDPOINT}/merchant/#{vaulted_shopper_id}" if options[:using_merchant_id]
       end
@@ -53,9 +53,9 @@ module BluesnapRuby
     # @param [String] vaulted_shopper_id the Shopper Id
     # @param [Hash] options
     # @options [TrueClass] :using_merchant_id Delete shopper using merchant shopper id.
-    # @return [BluesnapRuby::VaultedShopper]
+    # @return [AirwallexRuby::VaultedShopper]
     def self.delete vaulted_shopper_id, options = {}
-      request_url = URI.parse(BluesnapRuby.api_url).tap do |uri| 
+      request_url = URI.parse(AirwallexRuby.api_url).tap do |uri| 
         uri.path = "#{ENDPOINT}/#{vaulted_shopper_id}" 
         uri.path = "#{ENDPOINT}/merchant/#{vaulted_shopper_id}" if options[:using_merchant_id]
       end
@@ -67,12 +67,12 @@ module BluesnapRuby
     # Update a Shopper using the API.
     #
     # @param [Hash] shopper_data
-    # @return [BluesnapRuby::VaultedShopper]
+    # @return [AirwallexRuby::VaultedShopper]
     def update shopper_data
       attributes = self.class.attributes - [:vaulted_shopper_id]
       options = self.class.parse_body_for_request(attributes, shopper_data)
 
-      request_url = URI.parse(BluesnapRuby.api_url).tap do |uri| 
+      request_url = URI.parse(AirwallexRuby.api_url).tap do |uri| 
         uri.path = "#{ENDPOINT}/#{vaulted_shopper_id}" 
       end
 

@@ -1,4 +1,4 @@
-module BluesnapRuby
+module AirwallexRuby
   class Error < StandardError
     attr_reader :error
     attr_reader :response_body

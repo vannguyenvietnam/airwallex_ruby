@@ -1,15 +1,15 @@
-require "bluesnap_ruby/version"
-require "bluesnap_ruby/error"
-require "bluesnap_ruby/base"
-require "bluesnap_ruby/vendor"
-require "bluesnap_ruby/vaulted_shopper"
-require "bluesnap_ruby/transaction"
-require "bluesnap_ruby/alt_transaction"
-require "bluesnap_ruby/refund"
-require "bluesnap_ruby/report"
+require "airwallex_ruby/version"
+require "airwallex_ruby/error"
+require "airwallex_ruby/base"
+require "airwallex_ruby/vendor"
+require "airwallex_ruby/vaulted_shopper"
+require "airwallex_ruby/transaction"
+require "airwallex_ruby/alt_transaction"
+require "airwallex_ruby/refund"
+require "airwallex_ruby/report"
 
-module BluesnapRuby
-  @@api_url    = 'https://sandbox.bluesnap.com'
+module AirwallexRuby
+  @@api_url    = 'https://sandbox.airwallex.com'
   @@password = nil
   @@username = nil
   @@version = nil

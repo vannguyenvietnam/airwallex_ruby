@@ -1,17 +1,17 @@
 
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "bluesnap_ruby/version"
+require "airwallex_ruby/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "bluesnap_ruby"
-  spec.version       = BluesnapRuby::VERSION
+  spec.name          = "airwallex_ruby"
+  spec.version       = AirwallexRuby::VERSION
   spec.authors       = ["Van Nguyen"]
   spec.email         = ["bichvannguyenvnn@gmail.com"]
 
-  spec.summary       = "Ruby bindings for the BlueSnap API"
-  spec.description   = "BlueSnap is the easiest way to accept payments online. See https://home.bluesnap.com/ for details."
-  spec.homepage      = "https://github.com/vannguyenvietnam/bluesnap_ruby.git"
+  spec.summary       = "Ruby bindings for the airwallex API"
+  spec.description   = "Airwallex is the easiest way to accept payments online. See https://www.airwallex.com/ for details."
+  spec.homepage      = "https://github.com/vannguyenvietnam/airwallex_ruby.git"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
