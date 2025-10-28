@@ -1,4 +1,4 @@
-module BluesnapRuby
+module AirwallexRuby
   @@environment          = :sandbox
   @@client_id            = nil
   @@api_key              = nil

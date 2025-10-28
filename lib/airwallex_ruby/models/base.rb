@@ -51,13 +51,14 @@ module AirwallexRuby
         client             = Net::HTTP.new(uri.host, uri.port)
         client.use_ssl     = true
         client.verify_mode = OpenSSL::SSL::VERIFY_PEER
+        puts uri.to_s
 
         response           = client.request(
           klass.new(uri).tap do |http|
             http["Content-Type"] = "application/json"
             http["Accept"] = "application/json"
 
-            if name == 'Token'
+            if name == 'AirwallexRuby::Model::Token' 
               http["x-client-id"] = AirwallexRuby.client_id
               http["x-api-key"] = AirwallexRuby.api_key
             else
@@ -68,6 +69,7 @@ module AirwallexRuby
           end
         )
         
+        puts response.body
         return response if response.body.blank?
 
         begin

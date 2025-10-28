@@ -1,7 +1,7 @@
 module AirwallexRuby
   module Model
     class Token < Base
-      attr_accessor :token, :expired_at
+      attr_accessor :token, :expires_at
 
       ENDPOINT = '/authentication/login'
 
