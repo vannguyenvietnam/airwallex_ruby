@@ -56,4 +56,8 @@ module AirwallexRuby
   def self.api_url
     "#{api_server_url}/#{api_version}"
   end
+
+  def self.file_url
+    "#{file_server_url}/#{api_version}"
+  end
 end

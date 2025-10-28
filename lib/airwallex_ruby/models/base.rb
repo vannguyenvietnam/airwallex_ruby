@@ -47,9 +47,13 @@ module AirwallexRuby
         fetch Net::HTTP::Delete, uri, options
       end
 
-      def self.init_http_header http
+      def self.init_http_header http, options = {}
         http["Content-Type"] = "application/json"
         http["Accept"] = "application/json"
+
+        if options[:file]
+          http["Content-Type"] = "multipart/form-data"
+        end
         
         unless name == 'AirwallexRuby::Model::Token' 
           http["Authorization"] = "Bearer #{AirwallexRuby.access_token}"
@@ -62,7 +66,7 @@ module AirwallexRuby
         http
       end
 
-      def self.fetch klass, uri, request_boby
+      def self.fetch klass, uri, request_boby, options = {}
         client             = Net::HTTP.new(uri.host, uri.port)
         client.use_ssl     = true
         client.verify_mode = OpenSSL::SSL::VERIFY_PEER
@@ -70,7 +74,7 @@ module AirwallexRuby
 
         response           = client.request(
           klass.new(uri).tap do |http|
-            http = init_http_header(http)
+            http = init_http_header(http, options)
             http.body = JSON.dump(request_boby)
           end
         )
