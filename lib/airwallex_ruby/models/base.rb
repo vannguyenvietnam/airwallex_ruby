@@ -128,7 +128,7 @@ module AirwallexRuby
       def self.parse_body_for_request attributes, request_boby_hash
         attributes = attributes.map(&:to_s)
         temp_request_boby_hash = request_boby_hash.select { |k, _| attributes.include?(k.to_s) }
-        deep_camelize_keys(temp_request_boby_hash)
+        deep_snake_case_keys(temp_request_boby_hash)
       end
 
     end

@@ -1,24 +1,22 @@
 module AirwallexRuby
   module Model
-    class Vendor < Base
-      attr_accessor :vendor_id, :email, :name, :first_name, :last_name, :phone, :address,
-                    :city, :country, :state, :zip, :tax_id, :vat_id, :vendor_url, :ipn_url, 
-                    :default_payout_currency, :frequency, :delay, :vendor_principal,
-                    :vendor_agreement, :payout_info, :verification
+    class Account < Base
+      attr_accessor :id, :status, :requirements, :account_details, :customer_agreements,
+                    :primary_contact
 
-      ENDPOINT = '/services/2/vendors'
+      ENDPOINT = '/accounts'
 
-      # Uses the API to create a vendor.
+      # Uses the API to create a connected account for vendor.
       #
-      # @param [Hash] vendor_data
-      # @option vendor_data [String] :email *required*
-      # @option vendor_data [String] :country *required*
-      # @option vendor_data [Hash] :payout_info 
-      # @return [AirwallexRuby::Vendor]
-      def self.create vendor_data
-        attributes = self.attributes - [:vendor_id] # fix attributes allowed by POST API
-        request_body = parse_body_for_request(attributes, vendor_data)
-        request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path = ENDPOINT }
+      # @param [Hash] account_data
+      # @option account_data [Hash] :account_details *required*
+      # @option account_data [Hash] :customer_agreements *required*
+      # @option account_data [Hash] :primary_contact *required*
+      # @return [AirwallexRuby::Account]
+      def self.create account_data
+        attributes = self.attributes - [:id] # fix attributes allowed by POST API
+        request_body = parse_body_for_request(attributes, account_data)
+        request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += ENDPOINT }
         response = post(request_url, request_body)
         return nil if response.header['location'].nil?
 
