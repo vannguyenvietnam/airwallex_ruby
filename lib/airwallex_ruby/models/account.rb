@@ -1,8 +1,9 @@
 module AirwallexRuby
   module Model
     class Account < Base
-      attr_accessor :id, :status, :requirements, :account_details, :customer_agreements,
-                    :primary_contact
+      attr_accessor :id, :identifier, :account_details, :created_at, :customer_agreements, :metadata,
+                    :next_action, :nickname, :primary_contact, :reactivate_details, :requirements, :status,
+                    :suspend_details, :view_type
 
       ENDPOINT = '/accounts'
 

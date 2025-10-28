@@ -45,11 +45,15 @@ module AirwallexRuby
     @@api_version = value
   end
 
-  def self.server_url
-    AirwallexRuby::SERVER[environment]
+  def self.api_server_url
+    AirwallexRuby::SERVER[environment][:api_url]
+  end
+
+  def self.file_server_url
+    AirwallexRuby::SERVER[environment][:file_url]
   end
 
   def self.api_url
-    "#{server_url}/#{api_version}"
+    "#{api_server_url}/#{api_version}"
   end
 end
