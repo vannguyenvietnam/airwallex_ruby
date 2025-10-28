@@ -17,12 +17,10 @@ module AirwallexRuby
       def self.create account_data
         attributes = self.attributes - [:id] # fix attributes allowed by POST API
         request_body = parse_body_for_request(attributes, account_data)
-        request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += ENDPOINT }
+        request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += "#{ENDPOINT}/create" }
         response = post(request_url, request_body)
-        return nil if response.header['location'].nil?
-
-        location = response.header['location']
-        location.split('/').last
+        response_body = JSON.parse(response.body)
+        new(response_body)
       end
 
       # Update a vendor using the API.
