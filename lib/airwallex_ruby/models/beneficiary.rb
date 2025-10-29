@@ -1,7 +1,8 @@
 module AirwallexRuby
   module Model
     class Beneficiary < Base
-      attr_accessor :id, :beneficiary, :nickname, :payer_entity_type, :sca_exemptible, :transfer_methods
+      attr_accessor :id, :beneficiary, :nickname, :payer_entity_type, :sca_exemptible, :transfer_methods,
+                    :transfer_reason
 
       ENDPOINT = '/beneficiaries'
 
