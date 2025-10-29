@@ -13,10 +13,11 @@ module AirwallexRuby
       # @option beneficiary_data [Hash] :transfer_methods *required*
       # @return [AirwallexRuby::Beneficiary]
       def self.create beneficiary_data
+        connected_account_id = beneficiary_data.delete(:connected_account_id)
         attributes = self.attributes - [:id] # fix attributes allowed by POST API
         request_body = parse_body_for_request(attributes, beneficiary_data)
         request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += "#{ENDPOINT}/create" }
-        response = post(request_url, request_body)
+        response = post(request_url, request_body, on_behalf_of: connected_account_id)
         response_body = JSON.parse(response.body).deep_symbolize_keys
         new(response_body)
       end

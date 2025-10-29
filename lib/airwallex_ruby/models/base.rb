@@ -62,6 +62,7 @@ module AirwallexRuby
 
         http["x-client-id"] = AirwallexRuby.client_id
         http["x-api-key"] = AirwallexRuby.api_key
+        http["x-on-behalf-of"] = options[:on_behalf_of] if options[:on_behalf_of]
         # Return
         http
       end
