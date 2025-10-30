@@ -22,6 +22,22 @@ module AirwallexRuby
         new(response_body)
       end
 
+      # Uses the API to validate beneficiary creation.
+      #
+      # @param [Hash] beneficiary_data
+      # @option beneficiary_data [Hash] :beneficiary *required*
+      # @option beneficiary_data [Hash] :transfer_methods *required*
+      # @return [AirwallexRuby::Beneficiary]
+      def self.validate beneficiary_data
+        connected_account_id = beneficiary_data.delete(:connected_account_id)
+        attributes = self.attributes - [:id] # fix attributes allowed by POST API
+        request_body = parse_body_for_request(attributes, beneficiary_data)
+        request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += "#{ENDPOINT}/validate" }
+        response = post(request_url, request_body, on_behalf_of: connected_account_id)
+        puts response.body
+        response.code.to_s == '200'
+      end
+
       # Update a beneficiary using the API.
       #
       # @param [String] beneficiary_id *required*
