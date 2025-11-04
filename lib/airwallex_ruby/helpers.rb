@@ -1,5 +1,5 @@
 module AirwallexRuby
-
+  # RefinedString module
   module RefinedString
     refine String do
       def underscore
@@ -11,7 +11,9 @@ module AirwallexRuby
       end
     end
   end
+  # End of RefinedString module
 
+  # Helpers module
   module Helpers
     using RefinedString
 
@@ -29,6 +31,19 @@ module AirwallexRuby
 
       instance_variable_get(variable_name)
     end
-  end
 
+    # Generate code_verifier
+    def generate_code_verifier
+      SecureRandom.urlsafe_base64(32)
+    end
+
+    # Generate code_challenge
+    def generate_code_challenge
+      code_verifier = generate_code_verifier
+      digest = OpenSSL::Digest::SHA256.digest(code_verifier)
+      base64 = [digest].pack('m0')
+      base64.tr('+/', '-_').gsub('=', '')
+    end
+  end
+  # End of Helpers module
 end
