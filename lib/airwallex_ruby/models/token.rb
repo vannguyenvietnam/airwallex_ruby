@@ -1,8 +1,6 @@
 module AirwallexRuby
   module Model
     class Token < Base
-      include AirwallexRuby::Helpers
-
       attr_accessor :token, :expires_at, :authorization_code
 
       ENDPOINT = '/authentication'
@@ -23,18 +21,13 @@ module AirwallexRuby
       # Uses the API to authorize an account.
       #
       # @return [AirwallexRuby::Token]
-      def self.authorize_account(connected_account_id, options = {})
+      def self.authorize_account(authorize_data)
         request_url = URI.parse(AirwallexRuby.api_url).tap do |uri|
           uri.path += "#{ENDPOINT}/authorize"
         end
 
-        request_body = {
-          code_challenge: generate_code_challenge,
-          identity: options[:identity],
-          scope: [ 'w:awx_action:onboarding' ],
-        }
-
-        response = post(request_url, request_body, on_behalf_of: connected_account_id)
+        connected_account_id = authorize_data.delete(:connected_account_id)
+        response = post(request_url, authorize_data, on_behalf_of: connected_account_id)
         response_body = JSON.parse(response.body)
         new(response_body)
       end
