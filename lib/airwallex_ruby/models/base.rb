@@ -5,13 +5,13 @@ require 'net/http'
 module AirwallexRuby
   module Model
     class Base
-      def assign_attributes options = {}
+      def assign_attributes(options = {})
         self.class.parse_data(options).each do |k, v| 
           send("#{k}=", v) if self.class.attributes.include?(k.to_sym) 
         end
       end
 
-      def initialize options = {}
+      def initialize(options = {})
         assign_attributes(options)
       end
 
@@ -31,23 +31,23 @@ module AirwallexRuby
         self.class.attributes
       end
 
-      def self.post uri, request_body = {}, options = {}
-        fetch Net::HTTP::Post, uri, request_body, options
+      def self.post(uri, request_body = {}, options = {})
+        fetch(Net::HTTP::Post, uri, request_body, options)
       end
 
-      def self.put uri, request_body = {}, options = {}
-        fetch Net::HTTP::Put, uri, request_body, options
+      def self.put(uri, request_body = {}, options = {})
+        fetch(Net::HTTP::Put, uri, request_body, options)
       end
 
-      def self.get uri, request_body = {}, options = {}
-        fetch Net::HTTP::Get, uri, request_body, options
+      def self.get(uri, request_body = {}, options = {})
+        fetch(Net::HTTP::Get, uri, request_body, options)
       end
       
-      def self.delete uri, request_body = {}, options = {}
-        fetch Net::HTTP::Delete, uri, request_body, options
+      def self.delete(uri, request_body = {}, options = {})
+        fetch(Net::HTTP::Delete, uri, request_body, options)
       end
 
-      def self.init_http_header http, options = {}
+      def self.init_http_header(http, options = {})
         http["Content-Type"] = "application/json"
         http["Accept"] = "application/json"
 
@@ -55,7 +55,7 @@ module AirwallexRuby
           http["Content-Type"] = "multipart/form-data"
         end
         
-        if name == 'AirwallexRuby::Model::Token' 
+        if self.name == 'AirwallexRuby::Model::Token' 
           http["x-client-id"] = AirwallexRuby.client_id
           http["x-api-key"] = AirwallexRuby.api_key
         else
@@ -67,7 +67,7 @@ module AirwallexRuby
         http
       end
 
-      def self.fetch klass, uri, request_boby, options = {}
+      def self.fetch(klass, uri, request_body = {}, options = {})
         client             = Net::HTTP.new(uri.host, uri.port)
         client.use_ssl     = true
         client.verify_mode = OpenSSL::SSL::VERIFY_PEER
@@ -76,7 +76,7 @@ module AirwallexRuby
         response           = client.request(
           klass.new(uri).tap do |http|
             http = init_http_header(http, options)
-            http.body = JSON.dump(request_boby)
+            http.body = JSON.dump(request_body) if request_body.present?
           end
         )
         
@@ -126,11 +126,11 @@ module AirwallexRuby
         end
       end
 
-      def self.parse_data hash
+      def self.parse_data(hash)
         deep_snake_case_keys(hash)
       end
 
-      def self.parse_body_for_request attributes, request_body_hash
+      def self.parse_body_for_request(attributes, request_body_hash)
         attributes = attributes.map(&:to_s)
         request_body_hash.select { |k, _| attributes.include?(k.to_s) }
       end

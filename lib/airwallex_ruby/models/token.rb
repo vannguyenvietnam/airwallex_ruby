@@ -9,10 +9,7 @@ module AirwallexRuby
       #
       # @return [AirwallexRuby::Token]
       def self.fetch_token
-        request_url = URI.parse(AirwallexRuby.api_url).tap do |uri|
-          uri.path += "#{ENDPOINT}/login"
-        end
-
+        request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += "#{ENDPOINT}/login" }
         response = post(request_url)
         response_body = JSON.parse(response.body)
         new(response_body)
@@ -22,10 +19,7 @@ module AirwallexRuby
       #
       # @return [AirwallexRuby::Token]
       def self.authorize_account(authorize_data)
-        request_url = URI.parse(AirwallexRuby.api_url).tap do |uri|
-          uri.path += "#{ENDPOINT}/authorize"
-        end
-
+        request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += "#{ENDPOINT}/authorize" }
         connected_account_id = authorize_data.delete(:connected_account_id)
         response = post(request_url, authorize_data, on_behalf_of: connected_account_id)
         response_body = JSON.parse(response.body)
