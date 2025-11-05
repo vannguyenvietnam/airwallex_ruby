@@ -89,16 +89,16 @@ module AirwallexRuby
           raise Error::InvalidResponse.new(e.message)
         end
 
-        raise Error.new(response_body) unless response_body.is_a?(Hash)
+        raise Error.new(response_body) unless response_body.is_a?(Hash) || response_body.is_a?(Array)
 
-        if response_body['message'].is_a?(Array)
+        if response_body.is_a?(Hash) && response_body['message'].is_a?(Array)
           message = response_body['message'].first
           description = message.to_s
           description = message['description'] if message.is_a?(Hash)
           raise(Error.create(description, response_body))
         end
 
-        if response_body['message']
+        if response_body.is_a?(Hash) && response_body['message']
           message = response_body['message'].to_s
           raise(Error.create(message, response_body))
         end
