@@ -10,7 +10,7 @@ module AirwallexRuby
       # @return [AirwallexRuby::Token]
       def self.fetch_token
         request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += "#{ENDPOINT}/login" }
-        response = post(request_url)
+        response = post(request_url, {}, use_client_id: true)
         response_body = JSON.parse(response.body)
         new(response_body)
       end

@@ -54,8 +54,8 @@ module AirwallexRuby
         if options[:file]
           http["Content-Type"] = "multipart/form-data"
         end
-        
-        if self.name == 'AirwallexRuby::Model::Token' 
+
+        if options[:use_client_id]
           http["x-client-id"] = AirwallexRuby.client_id
           http["x-api-key"] = AirwallexRuby.api_key
         else
