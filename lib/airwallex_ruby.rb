@@ -6,6 +6,7 @@ require "airwallex_ruby/client"
 
 require "airwallex_ruby/models/base" 
 require "airwallex_ruby/models/token"
+require "airwallex_ruby/models/balance"
 require "airwallex_ruby/models/account"
 require "airwallex_ruby/models/account_amendment"
 require "airwallex_ruby/models/beneficiary"

@@ -31,20 +31,20 @@ module AirwallexRuby
         self.class.attributes
       end
 
-      def self.post uri, options = {}
-        fetch Net::HTTP::Post, uri, options
+      def self.post uri, request_body = {}, options = {}
+        fetch Net::HTTP::Post, uri, request_body, options
       end
 
-      def self.put uri, options = {}
-        fetch Net::HTTP::Put, uri, options
+      def self.put uri, request_body = {}, options = {}
+        fetch Net::HTTP::Put, uri, request_body, options
       end
 
-      def self.get uri, options = {}
-        fetch Net::HTTP::Get, uri, options
+      def self.get uri, request_body = {}, options = {}
+        fetch Net::HTTP::Get, uri, request_body, options
       end
       
-      def self.delete uri, options = {}
-        fetch Net::HTTP::Delete, uri, options
+      def self.delete uri, request_body = {}, options = {}
+        fetch Net::HTTP::Delete, uri, request_body, options
       end
 
       def self.init_http_header http, options = {}
@@ -55,13 +55,13 @@ module AirwallexRuby
           http["Content-Type"] = "multipart/form-data"
         end
         
-        unless name == 'AirwallexRuby::Model::Token' 
+        if name == 'AirwallexRuby::Model::Token' 
+          http["x-client-id"] = AirwallexRuby.client_id
+          http["x-api-key"] = AirwallexRuby.api_key
+        else
           http["Authorization"] = "Bearer #{AirwallexRuby.access_token}"
-          return http
         end
-
-        http["x-client-id"] = AirwallexRuby.client_id
-        http["x-api-key"] = AirwallexRuby.api_key
+        
         http["x-on-behalf-of"] = options[:on_behalf_of] if options[:on_behalf_of]
         # Return
         http

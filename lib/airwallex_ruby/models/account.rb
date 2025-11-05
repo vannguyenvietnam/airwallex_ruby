@@ -80,9 +80,9 @@ module AirwallexRuby
       # @return [AirwallexRuby::Account]
       def update account_data
         attributes = self.class.attributes - [:id]
-        options = self.class.parse_body_for_request(attributes, account_data)
+        request_body = self.class.parse_body_for_request(attributes, account_data)
         request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += "#{ENDPOINT}/#{id}/update" }
-        response = self.class.put(request_url, options)
+        response = self.class.put(request_url, request_body)
         response_body = JSON.parse(response.body).deep_symbolize_keys
         new(response_body)
       end
