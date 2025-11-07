@@ -87,7 +87,7 @@ module AirwallexRuby
         attributes = self.class.attributes - [:id]
         request_body = self.class.parse_body_for_request(attributes, beneficiary_data)
         request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += "#{ENDPOINT}/#{id}/update" }
-        response = self.class.put(request_url, request_body, on_behalf_of: connected_account_id)
+        response = self.class.post(request_url, request_body, on_behalf_of: connected_account_id)
         response_body = JSON.parse(response.body).deep_symbolize_keys
         new(response_body)
       end
