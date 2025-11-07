@@ -6,6 +6,29 @@ module AirwallexRuby
                     :suspend_details, :view_type
 
       ENDPOINT = '/accounts'
+      PLATFORM_ENDPOINT = '/account'
+
+      # Fetches platform account using the API.
+      #
+      # @param [String] account_id the Account Id
+      # @return [AirwallexRuby::Account]
+      def self.platform_account
+        request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += PLATFORM_ENDPOINT }
+        response = get(request_url)
+        response_body = JSON.parse(response.body).deep_symbolize_keys
+        new(response_body)
+      end
+
+      # Fetches platform account wallet information using the API.
+      #
+      # @param [String] account_id the Account Id
+      # @return [AirwallexRuby::Account]
+      def self.platform_account_wallet_info
+        request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += "#{PLATFORM_ENDPOINT}/wallet_info" }
+        response = get(request_url)
+        response_body = JSON.parse(response.body).deep_symbolize_keys
+        new(response_body)
+      end
 
       # Uses the API to create a connected account for vendor.
       #
@@ -69,6 +92,42 @@ module AirwallexRuby
       # @return [AirwallexRuby::Account]
       def self.submit account_id
         request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += "#{ENDPOINT}/#{account_id}/submit" }
+        response = post(request_url)
+        response_body = JSON.parse(response.body).deep_symbolize_keys
+        new(response_body)
+      end
+
+      # Suspend an account for disactivation using the API.
+      #
+      # @param [String] account_id the Account Id
+      # @return [AirwallexRuby::Account]
+      def self.suspend account_id
+        request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += "#{ENDPOINT}/#{account_id}/suspend" }
+        response = post(request_url)
+        response_body = JSON.parse(response.body).deep_symbolize_keys
+        new(response_body)
+      end
+
+      # Reactivate an account for reactivation using the API.
+      #
+      # @param [String] account_id the Account Id
+      # @return [AirwallexRuby::Account]
+      def self.reactivate account_id
+        request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += "#{ENDPOINT}/#{account_id}/reactivate" }
+        response = post(request_url)
+        response_body = JSON.parse(response.body).deep_symbolize_keys
+        new(response_body)
+      end
+
+      # Reactivate an account for reactivation using the API.
+      #
+      # @param [String] account_id the Account Id
+      # @return [AirwallexRuby::Account]
+      def self.agree_terms_and_conditions account_id
+        request_url = URI.parse(AirwallexRuby.api_url).tap do |uri| 
+          uri.path += "#{ENDPOINT}/#{account_id}/terms_and_conditions/agree" 
+        end
+
         response = post(request_url)
         response_body = JSON.parse(response.body).deep_symbolize_keys
         new(response_body)

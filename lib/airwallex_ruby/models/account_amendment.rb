@@ -3,7 +3,7 @@ module AirwallexRuby
     class AccountAmendment < Base
       attr_accessor :id, :primary_contact, :status, :store_details, :target
 
-      ENDPOINT = '/accounts/amendments'
+      ENDPOINT = '/account/amendments'
 
       # Uses the API to create an account amendment for marketplace account.
       #
