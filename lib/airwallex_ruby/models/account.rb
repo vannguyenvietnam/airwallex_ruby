@@ -145,6 +145,25 @@ module AirwallexRuby
         response_body = JSON.parse(response.body).deep_symbolize_keys
         self.class.new(response_body)
       end
+
+      # Simulation (for sandbox only)
+      def self.update_status account_id, status, options = {}
+        raise 'Simulation methods are for sandbox environment only' unless AirwallexRuby.environment == :sandbox
+
+        request_url = URI.parse(AirwallexRuby.simulation_api_url).tap do |uri| 
+          uri.path += "#{ENDPOINT}/#{account_id}/update_status" 
+        end
+
+        request_body = { 
+          force: options.fetch(:force, false),
+          next_status: status 
+        }
+
+        response = post(request_url, request_body)
+        response_body = JSON.parse(response.body).deep_symbolize_keys
+        new(response_body)
+      end
+      # End of Simulation methods
     end
   end
 end
