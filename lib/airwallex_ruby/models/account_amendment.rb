@@ -31,6 +31,28 @@ module AirwallexRuby
         response_body = JSON.parse(response.body).deep_symbolize_keys
         new(response_body)
       end
+
+      # Simulation (for sandbox only)
+      def self.approve account_amendment_id
+        request_url = URI.parse(AirwallexRuby.simulation_api_url).tap do |uri| 
+          uri.path += "#{ENDPOINT}/#{account_amendment_id}/approve" 
+        end
+
+        response = post(request_url)
+        response_body = JSON.parse(response.body).deep_symbolize_keys
+        new(response_body)
+      end
+
+      def self.reject account_amendment_id
+        request_url = URI.parse(AirwallexRuby.simulation_api_url).tap do |uri| 
+          uri.path += "#{ENDPOINT}/#{account_amendment_id}/reject" 
+        end
+        
+        response = post(request_url)
+        response_body = JSON.parse(response.body).deep_symbolize_keys
+        new(response_body)
+      end
+      # End of Simulation methods
     end
   end
 end

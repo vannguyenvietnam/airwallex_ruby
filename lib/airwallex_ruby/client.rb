@@ -58,6 +58,8 @@ module AirwallexRuby
   end
 
   def self.simulation_api_url
+    raise 'Simulation methods are for sandbox environment only' unless environment == :sandbox
+
     "#{api_server_url}/#{api_version}/simulation"
   end
 
