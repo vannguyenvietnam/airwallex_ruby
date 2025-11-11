@@ -8,8 +8,8 @@ module AirwallexRuby
       # Uses the API to create an account amendment for marketplace account.
       #
       # @param [Hash] account_amendment_data
-      # @option account_amendment_data [Hash] :account_details *required*
-      # @option account_amendment_data [Hash] :customer_agreements *required*
+      # @option account_amendment_data [Hash] :target *required*
+      # @option account_amendment_data [Hash] :store_details *required*
       # @option account_amendment_data [Hash] :primary_contact *required*
       # @return [AirwallexRuby::AccountAmendment]
       def self.create account_amendment_data
@@ -33,6 +33,10 @@ module AirwallexRuby
       end
 
       # Simulation (for sandbox only)
+      # Approves an account amendment using the API.
+      #
+      # @param [String] account_amendment_id the Account Amendment Id
+      # @return [AirwallexRuby::AccountAmendment]
       def self.approve account_amendment_id
         request_url = URI.parse(AirwallexRuby.simulation_api_url).tap do |uri| 
           uri.path += "#{ENDPOINT}/#{account_amendment_id}/approve" 
@@ -43,6 +47,10 @@ module AirwallexRuby
         new(response_body)
       end
 
+      # Rejects an account amendment using the API.
+      #
+      # @param [String] account_amendment_id the Account Amendment Id
+      # @return [AirwallexRuby::AccountAmendment]
       def self.reject account_amendment_id
         request_url = URI.parse(AirwallexRuby.simulation_api_url).tap do |uri| 
           uri.path += "#{ENDPOINT}/#{account_amendment_id}/reject" 

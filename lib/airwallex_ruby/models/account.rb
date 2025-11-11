@@ -59,10 +59,14 @@ module AirwallexRuby
       # Fetches all of your Accounts using the API.
       #
       # @param [Hash] options
-      # @options [Integer] :pagesize Positive integer. Default is 10 if not set. Maximum is 500.
-      # @options [TrueClass] :gettotal true = Include the number of total results in the response.
-      # @options [Account ID] :after Account ID. The response will get the page of results after the specified ID (exclusive).
-      # @options [Account ID] :before Account ID. The response will get the page of results before the specified ID (exclusive).
+      # @options [String] :account_status - The status of the account. Can be CREATED, SUBMITTED, ACTION_REQUIRED, ACTIVE, SUSPENDED.
+      # @options [String] :email.
+      # @options [String] :from_created_at - The start date of created_at in ISO8601 format (inclusive).
+      # @options [String] :to_created_at - The end date of created_at in ISO8601 format (inclusive).
+      # @options [String] :identifier - The identifier that the platform uses to identify a merchant, usually a unique merchant ID.
+      # @options [String] :metadata - The metadata of the account. The value should be set in key:value format. (e.g., id:1).
+      # @options [Integer] :page_num - Page number, starts from 0.
+      # @options [Integer] :page_size - Number of results per page. Default value is 100, maximum 500.
       # @return [Array<AirwallexRuby::Account>]
       def self.all options = {}
         request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += ENDPOINT }
@@ -148,8 +152,6 @@ module AirwallexRuby
 
       # Simulation (for sandbox only)
       def self.update_status account_id, status, options = {}
-        raise 'Simulation methods are for sandbox environment only' unless AirwallexRuby.environment == :sandbox
-
         request_url = URI.parse(AirwallexRuby.simulation_api_url).tap do |uri| 
           uri.path += "#{ENDPOINT}/#{account_id}/update_status" 
         end
