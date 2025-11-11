@@ -4,15 +4,15 @@ module AirwallexRuby
       attr_accessor :id, :comment, :details, :entity_type, :status, :updated_at, :requested_limit, :mandate_type,
                     :limit, :effective_at, :currency, :availables
 
-      ENDPOINT = '/account/capabilities'
+      ENDPOINT = '/account_capabilities'
 
       # Fetches an account capability using the API.
       #
       # @param [String] account_capability_id the Account Capability Id
       # @return [AirwallexRuby::AccountCapability]
-      def self.find account_capability_id
+      def self.find account_capability_id, options = {}
         request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += "#{ENDPOINT}/#{account_capability_id}" }
-        response = get(request_url)
+        response = get(request_url, {}, on_behalf_of: options[:connect_account_id])
         response_body = JSON.parse(response.body).deep_symbolize_keys
         new(response_body)
       end
