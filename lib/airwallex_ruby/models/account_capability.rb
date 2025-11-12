@@ -12,7 +12,7 @@ module AirwallexRuby
       # @return [AirwallexRuby::AccountCapability]
       def self.find account_capability_id, options = {}
         request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += "#{ENDPOINT}/#{account_capability_id}" }
-        response = get(request_url, {}, on_behalf_of: options[:connect_account_id])
+        response = get(request_url, {}, options)
         response_body = JSON.parse(response.body).deep_symbolize_keys
         new(response_body)
       end
@@ -31,7 +31,7 @@ module AirwallexRuby
           enroll_sme_program: options[:enroll_sme_program]
         }
 
-        response = post(request_url, request_body)
+        response = post(request_url, request_body, options)
         response_body = JSON.parse(response.body).deep_symbolize_keys
         new(response_body)
       end
@@ -52,7 +52,7 @@ module AirwallexRuby
         
         params_text = options.map { |k, v| "#{k}=#{ERB::Util.url_encode(v.to_s)}" }.join("\&")
         request_url.query = params_text
-        response = get(request_url)
+        response = get(request_url, {}, options)
         response_body = JSON.parse(response.body)
         return [] if response_body['items'].nil?
 

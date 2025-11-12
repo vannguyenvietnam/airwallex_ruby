@@ -23,7 +23,7 @@ module AirwallexRuby
         
         params_text = options.map { |k, v| "#{k}=#{ERB::Util.url_encode(v.to_s)}" }.join("\&")
         request_url.query = params_text
-        response = get(request_url)
+        response = get(request_url, {}, options)
         response_body = JSON.parse(response.body)
         return [] if response_body['items'].nil?
 

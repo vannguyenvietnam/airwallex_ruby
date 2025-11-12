@@ -14,9 +14,10 @@ module AirwallexRuby
       # @return [AirwallexRuby::AccountAmendment]
       def self.create account_amendment_data
         attributes = self.attributes - [:id] # fix attributes allowed by POST API
+        connect_account_id = account_amendment_data.delete(:connect_account_id)
         request_body = parse_body_for_request(attributes, account_amendment_data)
         request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += "#{ENDPOINT}/create" }
-        response = post(request_url, request_body)
+        response = post(request_url, request_body, on_behalf_of: connect_account_id)
         response_body = JSON.parse(response.body).deep_symbolize_keys
         new(response_body)
       end
