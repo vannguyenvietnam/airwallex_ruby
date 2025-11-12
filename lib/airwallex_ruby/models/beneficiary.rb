@@ -33,8 +33,7 @@ module AirwallexRuby
         attributes = self.attributes - [:id] # fix attributes allowed by POST API
         request_body = parse_body_for_request(attributes, beneficiary_data)
         request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += "#{ENDPOINT}/validate" }
-        response = post(request_url, request_body, on_behalf_of: connected_account_id)
-        puts response.body
+        response = post(request_url, request_body, on_behalf_of: connected_account_id, no_response_body: true)
         response.code.to_s == '200'
       end
 

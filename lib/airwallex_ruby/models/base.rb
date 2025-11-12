@@ -81,7 +81,7 @@ module AirwallexRuby
         )
         
         puts response.body
-        return response if response.body.blank?
+        return response if response.body.blank? || options[:no_response_body]
 
         begin
           response_body = JSON.parse(response.body)
