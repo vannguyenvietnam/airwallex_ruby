@@ -130,11 +130,17 @@ module AirwallexRuby
         deep_snake_case_keys(hash)
       end
 
+      def self.init_params_for_request(params = {})
+        valid_params = params.deep_dup
+        valid_params.delete(:on_behalf_of)
+        valid_params.map { |k, v| "#{k}=#{ERB::Util.url_encode(v.to_s)}" }.join("\&")
+      end
+
       def self.parse_body_for_request(attributes, request_body_hash)
         attributes = attributes.map(&:to_s)
         request_body_hash.select { |k, _| attributes.include?(k.to_s) }
       end
-
+      # End of class Base
     end
   end
 end

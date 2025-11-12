@@ -70,8 +70,7 @@ module AirwallexRuby
       # @return [Array<AirwallexRuby::Account>]
       def self.all options = {}
         request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += ENDPOINT }
-        params_text = options.map { |k, v| "#{k}=#{ERB::Util.url_encode(v.to_s)}" }.join("\&")
-        request_url.query = params_text
+        request_url.query = init_params_for_request(options)
         response = get(request_url)
         response_body = JSON.parse(response.body)
         return [] if response_body['items'].nil?
