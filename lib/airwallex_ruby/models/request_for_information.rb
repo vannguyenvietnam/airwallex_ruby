@@ -17,8 +17,8 @@ module AirwallexRuby
       # @options [Integer] :page_size - A limit on the number of records to be returned on a page, between 1 and 2000. The default is 100.
       # @return [Array<AirwallexRuby::RequestForInformation>]
       def self.all options = {}
-        request_url = URI.parse(AirwallexRuby.simulation_api_url).tap do |uri| 
-          uri.path += "#{ENDPOINT}/#{account_capability_id}/funding_limits" 
+        request_url = URI.parse(AirwallexRuby.api_url).tap do |uri| 
+          uri.path += "#{ENDPOINT}" 
         end
         
         params_text = options.map { |k, v| "#{k}=#{ERB::Util.url_encode(v.to_s)}" }.join("\&")
@@ -47,7 +47,7 @@ module AirwallexRuby
       # @param [Array] rfi_response the response to the Request For Information. List of questions and answers.
       # @return [AirwallexRuby::RequestForInformation]
       def self.respond rfi_id, rfi_response
-        request_url = URI.parse(AirwallexRuby.simulation_api_url).tap do |uri|
+        request_url = URI.parse(AirwallexRuby.api_url).tap do |uri|
           uri.path += "#{ENDPOINT}/#{rfi_id}/respond"
         end
 

@@ -22,7 +22,7 @@ module AirwallexRuby
       # @param [String] account_capability_id the Account Capability Id
       # @return [AirwallexRuby::AccountCapability]
       def self.enable account_capability_id, options = {}
-        request_url = URI.parse(AirwallexRuby.simulation_api_url).tap do |uri| 
+        request_url = URI.parse(AirwallexRuby.api_url).tap do |uri| 
           uri.path += "#{ENDPOINT}/#{account_capability_id}/enable" 
         end
 
@@ -46,7 +46,7 @@ module AirwallexRuby
       # @options [Integer] :page_size - Positive integer. Page size
       # @return [Array<AirwallexRuby::AccountCapability>]
       def self.funding_limits options = {}
-        request_url = URI.parse(AirwallexRuby.simulation_api_url).tap do |uri| 
+        request_url = URI.parse(AirwallexRuby.api_url).tap do |uri| 
           uri.path += "#{ENDPOINT}/#{account_capability_id}/funding_limits" 
         end
         

@@ -26,7 +26,7 @@ module AirwallexRuby
       # @options [Integer] :page_size - Number of payment method types to be listed per page. Default value is 100. Maximum is 1000. The value greater than the maximum will be capped to the maximum.
       # @return [AirwallexRuby::AccountCapability]
       def self.payment_method_types options = {}
-        request_url = URI.parse(AirwallexRuby.simulation_api_url).tap do |uri|
+        request_url = URI.parse(AirwallexRuby.api_url).tap do |uri|
           uri.path += "#{ENDPOINT}/payment_method_types"
         end
 
