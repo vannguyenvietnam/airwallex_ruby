@@ -27,8 +27,8 @@ module AirwallexRuby
       # @param [Hash] customer_data *required*
       # @return [AirwallexRuby::Customer]
       def self.update(customer_id, customer_data, options = {})
-        temp_account = new(id: account_id)
-        temp_account.update(account_data, options)
+        temp_account = new(id: customer_id)
+        temp_account.update(customer_data, options)
       end
 
       # Fetches all customers using the API.
