@@ -18,10 +18,9 @@ module AirwallexRuby
       # Uses the API to authorize an account.
       #
       # @return [AirwallexRuby::Token]
-      def self.authorize_account(authorize_data)
+      def self.authorize_account(authorize_data, options = {})
         request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += "#{ENDPOINT}/authorize" }
-        connected_account_id = authorize_data.delete(:connected_account_id)
-        response = post(request_url, authorize_data, on_behalf_of: connected_account_id)
+        response = post(request_url, authorize_data, options)
         response_body = JSON.parse(response.body)
         new(response_body)
       end

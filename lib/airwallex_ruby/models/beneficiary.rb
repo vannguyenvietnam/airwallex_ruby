@@ -12,12 +12,11 @@ module AirwallexRuby
       # @option beneficiary_data [Hash] :beneficiary *required*
       # @option beneficiary_data [Hash] :transfer_methods *required*
       # @return [AirwallexRuby::Beneficiary]
-      def self.create beneficiary_data
-        connected_account_id = beneficiary_data.delete(:connected_account_id)
+      def self.create(beneficiary_data, options = {})
         attributes = self.attributes - [:id] # fix attributes allowed by POST API
         request_body = parse_body_for_request(attributes, beneficiary_data)
         request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += "#{ENDPOINT}/create" }
-        response = post(request_url, request_body, on_behalf_of: connected_account_id)
+        response = post(request_url, request_body, options)
         response_body = JSON.parse(response.body).deep_symbolize_keys
         new(response_body)
       end
@@ -28,12 +27,11 @@ module AirwallexRuby
       # @option beneficiary_data [Hash] :beneficiary *required*
       # @option beneficiary_data [Hash] :transfer_methods *required*
       # @return [AirwallexRuby::Beneficiary]
-      def self.validate beneficiary_data
-        connected_account_id = beneficiary_data.delete(:connected_account_id)
+      def self.validate(beneficiary_data, options = {})
         attributes = self.attributes - [:id] # fix attributes allowed by POST API
         request_body = parse_body_for_request(attributes, beneficiary_data)
         request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += "#{ENDPOINT}/validate" }
-        response = post(request_url, request_body, on_behalf_of: connected_account_id, no_response_body: true)
+        response = post(request_url, request_body, options.merge(no_response_body: true))
         response.code.to_s == '200'
       end
 
@@ -42,9 +40,9 @@ module AirwallexRuby
       # @param [String] beneficiary_id *required*
       # @param [Hash] beneficiary_data *required*
       # @return [AirwallexRuby::Beneficiary]
-      def self.update beneficiary_id, beneficiary_data
+      def self.update(beneficiary_id, beneficiary_data, options = {})
         temp_account = new(id: beneficiary_id)
-        temp_account.update(beneficiary_data)
+        temp_account.update(beneficiary_data, options)
       end
 
       # Fetches all of your Beneficiaries using the API.
@@ -55,7 +53,7 @@ module AirwallexRuby
       # @options [Beneficiary ID] :after Beneficiary ID. The response will get the page of results after the specified ID (exclusive).
       # @options [Beneficiary ID] :before Beneficiary ID. The response will get the page of results before the specified ID (exclusive).
       # @return [Array<AirwallexRuby::Beneficiary>]
-      def self.all options = {}
+      def self.all(options = {})
         request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += ENDPOINT }
         request_url.query = init_params_for_request(options)
         response = get(request_url, {}, options)
@@ -69,9 +67,9 @@ module AirwallexRuby
       #
       # @param [String] beneficiary_id the Beneficiary Id
       # @return [AirwallexRuby::Beneficiary]
-      def self.find beneficiary_id
+      def self.find(beneficiary_id, options = {})
         request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += "#{ENDPOINT}/#{beneficiary_id}" }
-        response = get(request_url)
+        response = get(request_url, {}, options)
         response_body = JSON.parse(response.body).deep_symbolize_keys
         new(response_body)
       end
@@ -80,12 +78,11 @@ module AirwallexRuby
       #
       # @param [Hash] beneficiary_data
       # @return [AirwallexRuby::Beneficiary]
-      def update beneficiary_data
-        connected_account_id = beneficiary_data.delete(:connected_account_id)
+      def update(beneficiary_data, options = {})
         attributes = self.class.attributes - [:id]
         request_body = self.class.parse_body_for_request(attributes, beneficiary_data)
         request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += "#{ENDPOINT}/#{id}/update" }
-        response = self.class.post(request_url, request_body, on_behalf_of: connected_account_id)
+        response = self.class.post(request_url, request_body, options)
         response_body = JSON.parse(response.body).deep_symbolize_keys
         self.class.new(response_body)
       end

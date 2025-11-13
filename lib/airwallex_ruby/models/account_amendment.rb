@@ -12,12 +12,11 @@ module AirwallexRuby
       # @option account_amendment_data [Hash] :store_details *required*
       # @option account_amendment_data [Hash] :primary_contact *required*
       # @return [AirwallexRuby::AccountAmendment]
-      def self.create account_amendment_data
+      def self.create(account_amendment_data, options = {})
         attributes = self.attributes - [:id] # fix attributes allowed by POST API
-        connect_account_id = account_amendment_data.delete(:connect_account_id)
         request_body = parse_body_for_request(attributes, account_amendment_data)
         request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += "#{ENDPOINT}/create" }
-        response = post(request_url, request_body, on_behalf_of: connect_account_id)
+        response = post(request_url, request_body, options)
         response_body = JSON.parse(response.body).deep_symbolize_keys
         new(response_body)
       end
@@ -26,9 +25,9 @@ module AirwallexRuby
       #
       # @param [String] account_amendment_id the Account Amendment Id
       # @return [AirwallexRuby::AccountAmendment]
-      def self.find account_amendment_id
+      def self.find(account_amendment_id, options = {})
         request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += "#{ENDPOINT}/#{account_amendment_id}" }
-        response = get(request_url)
+        response = get(request_url, {}, options)
         response_body = JSON.parse(response.body).deep_symbolize_keys
         new(response_body)
       end
@@ -38,12 +37,12 @@ module AirwallexRuby
       #
       # @param [String] account_amendment_id the Account Amendment Id
       # @return [AirwallexRuby::AccountAmendment]
-      def self.approve account_amendment_id
+      def self.approve(account_amendment_id, options = {})
         request_url = URI.parse(AirwallexRuby.simulation_api_url).tap do |uri| 
           uri.path += "#{ENDPOINT}/#{account_amendment_id}/approve" 
         end
 
-        response = post(request_url)
+        response = post(request_url, {}, options)
         response_body = JSON.parse(response.body).deep_symbolize_keys
         new(response_body)
       end
@@ -52,12 +51,12 @@ module AirwallexRuby
       #
       # @param [String] account_amendment_id the Account Amendment Id
       # @return [AirwallexRuby::AccountAmendment]
-      def self.reject account_amendment_id
+      def self.reject(account_amendment_id, options = {})
         request_url = URI.parse(AirwallexRuby.simulation_api_url).tap do |uri| 
           uri.path += "#{ENDPOINT}/#{account_amendment_id}/reject" 
         end
         
-        response = post(request_url)
+        response = post(request_url, {}, options)
         response_body = JSON.parse(response.body).deep_symbolize_keys
         new(response_body)
       end

@@ -10,7 +10,7 @@ module AirwallexRuby
       #
       # @param [String] account_capability_id the Account Capability Id
       # @return [AirwallexRuby::AccountCapability]
-      def self.find account_capability_id, options = {}
+      def self.find(account_capability_id, options = {})
         request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += "#{ENDPOINT}/#{account_capability_id}" }
         response = get(request_url, {}, options)
         response_body = JSON.parse(response.body).deep_symbolize_keys
@@ -21,7 +21,7 @@ module AirwallexRuby
       #
       # @param [String] account_capability_id the Account Capability Id
       # @return [AirwallexRuby::AccountCapability]
-      def self.enable account_capability_id, options = {}
+      def self.enable(account_capability_id, options = {})
         request_url = URI.parse(AirwallexRuby.api_url).tap do |uri| 
           uri.path += "#{ENDPOINT}/#{account_capability_id}/enable" 
         end
@@ -45,9 +45,9 @@ module AirwallexRuby
       # @options [Integer] :page_num - Positive integer. Page number
       # @options [Integer] :page_size - Positive integer. Page size
       # @return [Array<AirwallexRuby::AccountCapability>]
-      def self.funding_limits options = {}
+      def self.funding_limits(options = {})
         request_url = URI.parse(AirwallexRuby.api_url).tap do |uri| 
-          uri.path += "#{ENDPOINT}/#{account_capability_id}/funding_limits" 
+          uri.path += "#{ENDPOINT}/funding_limits" 
         end
         
         request_url.query = init_params_for_request(options)

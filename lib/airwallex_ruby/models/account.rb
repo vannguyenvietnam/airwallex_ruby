@@ -12,9 +12,9 @@ module AirwallexRuby
       #
       # @param [String] account_id the Account Id
       # @return [AirwallexRuby::Account]
-      def self.platform_account
+      def self.platform_account(options = {})
         request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += PLATFORM_ENDPOINT }
-        response = get(request_url)
+        response = get(request_url, {}, options)
         response_body = JSON.parse(response.body).deep_symbolize_keys
         new(response_body)
       end
@@ -23,9 +23,9 @@ module AirwallexRuby
       #
       # @param [String] account_id the Account Id
       # @return [AirwallexRuby::Account]
-      def self.platform_account_wallet_info
+      def self.platform_account_wallet_info(options = {})
         request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += "#{PLATFORM_ENDPOINT}/wallet_info" }
-        response = get(request_url)
+        response = get(request_url, {}, options)
         response_body = JSON.parse(response.body).deep_symbolize_keys
         new(response_body)
       end
@@ -37,11 +37,11 @@ module AirwallexRuby
       # @option account_data [Hash] :customer_agreements *required*
       # @option account_data [Hash] :primary_contact *required*
       # @return [AirwallexRuby::Account]
-      def self.create account_data
+      def self.create(account_data, options = {})
         attributes = self.attributes - [:id] # fix attributes allowed by POST API
         request_body = parse_body_for_request(attributes, account_data)
         request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += "#{ENDPOINT}/create" }
-        response = post(request_url, request_body)
+        response = post(request_url, request_body, options)
         response_body = JSON.parse(response.body).deep_symbolize_keys
         new(response_body)
       end
@@ -51,9 +51,9 @@ module AirwallexRuby
       # @param [String] account_id *required*
       # @param [Hash] account_data *required*
       # @return [AirwallexRuby::Account]
-      def self.update account_id, account_data
+      def self.update(account_id, account_data, options = {})
         temp_account = new(id: account_id)
-        temp_account.update(account_data)
+        temp_account.update(account_data, options)
       end
 
       # Fetches all of your Accounts using the API.
@@ -68,10 +68,10 @@ module AirwallexRuby
       # @options [Integer] :page_num - Page number, starts from 0.
       # @options [Integer] :page_size - Number of results per page. Default value is 100, maximum 500.
       # @return [Array<AirwallexRuby::Account>]
-      def self.all options = {}
+      def self.all(options = {})
         request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += ENDPOINT }
         request_url.query = init_params_for_request(options)
-        response = get(request_url)
+        response = get(request_url, {}, options)
         response_body = JSON.parse(response.body)
         return [] if response_body['items'].nil?
 
@@ -82,9 +82,9 @@ module AirwallexRuby
       #
       # @param [String] account_id the Account Id
       # @return [AirwallexRuby::Account]
-      def self.find account_id
+      def self.find(account_id, options = {})
         request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += "#{ENDPOINT}/#{account_id}" }
-        response = get(request_url)
+        response = get(request_url, {}, options)
         response_body = JSON.parse(response.body).deep_symbolize_keys
         new(response_body)
       end
@@ -93,9 +93,9 @@ module AirwallexRuby
       #
       # @param [String] account_id the Account Id
       # @return [AirwallexRuby::Account]
-      def self.submit account_id
+      def self.submit(account_id, options = {})
         request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += "#{ENDPOINT}/#{account_id}/submit" }
-        response = post(request_url)
+        response = post(request_url, {}, options)
         response_body = JSON.parse(response.body).deep_symbolize_keys
         new(response_body)
       end
@@ -104,9 +104,9 @@ module AirwallexRuby
       #
       # @param [String] account_id the Account Id
       # @return [AirwallexRuby::Account]
-      def self.suspend account_id
+      def self.suspend(account_id, options = {})
         request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += "#{ENDPOINT}/#{account_id}/suspend" }
-        response = post(request_url)
+        response = post(request_url, {}, options)
         response_body = JSON.parse(response.body).deep_symbolize_keys
         new(response_body)
       end
@@ -115,9 +115,9 @@ module AirwallexRuby
       #
       # @param [String] account_id the Account Id
       # @return [AirwallexRuby::Account]
-      def self.reactivate account_id
+      def self.reactivate(account_id, options = {})
         request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += "#{ENDPOINT}/#{account_id}/reactivate" }
-        response = post(request_url)
+        response = post(request_url, {}, options)
         response_body = JSON.parse(response.body).deep_symbolize_keys
         new(response_body)
       end
@@ -126,12 +126,12 @@ module AirwallexRuby
       #
       # @param [String] account_id the Account Id
       # @return [AirwallexRuby::Account]
-      def self.agree_terms_and_conditions account_id
+      def self.agree_terms_and_conditions(account_id, options = {})
         request_url = URI.parse(AirwallexRuby.api_url).tap do |uri| 
           uri.path += "#{ENDPOINT}/#{account_id}/terms_and_conditions/agree" 
         end
 
-        response = post(request_url)
+        response = post(request_url, {}, options)
         response_body = JSON.parse(response.body).deep_symbolize_keys
         new(response_body)
       end
@@ -140,17 +140,17 @@ module AirwallexRuby
       #
       # @param [Hash] account_data
       # @return [AirwallexRuby::Account]
-      def update account_data
+      def update(account_data, options = {})
         attributes = self.class.attributes - [:id]
         request_body = self.class.parse_body_for_request(attributes, account_data)
         request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += "#{ENDPOINT}/#{id}/update" }
-        response = self.class.post(request_url, request_body)
+        response = self.class.post(request_url, request_body, options)
         response_body = JSON.parse(response.body).deep_symbolize_keys
         self.class.new(response_body)
       end
 
       # Simulation (for sandbox only)
-      def self.update_status account_id, status, options = {}
+      def self.update_status(account_id, status, options = {})
         request_url = URI.parse(AirwallexRuby.simulation_api_url).tap do |uri| 
           uri.path += "#{ENDPOINT}/#{account_id}/update_status" 
         end
@@ -160,7 +160,7 @@ module AirwallexRuby
           next_status: status 
         }
 
-        response = post(request_url, request_body)
+        response = post(request_url, request_body, options)
         response_body = JSON.parse(response.body).deep_symbolize_keys
         new(response_body)
       end
