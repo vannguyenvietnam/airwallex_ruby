@@ -61,7 +61,7 @@ module AirwallexRuby
         new(response_body)
       end
 
-      # Submit a customer for activation using the API.
+      # Generate client secret for a customer for activation using the API.
       #
       # @param [String] customer_id the Customer Id
       # @return [AirwallexRuby::Customer]
