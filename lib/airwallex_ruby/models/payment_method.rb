@@ -65,16 +65,16 @@ module AirwallexRuby
         new(response_body)
       end
 
-      # Generate client secret for a customer for activation using the API.
+      # Disable a payment method for a customer using the API.
       #
-      # @param [String] customer_id the Customer Id
-      # @return [AirwallexRuby::Customer]
-      def self.generate_client_secret(customer_id, options = {})
+      # @param [String] payment_method_id the Payment Method Id
+      # @return [AirwallexRuby::PaymentMethod]
+      def self.disable(payment_method_id, payment_method_data, options = {})
         request_url = URI.parse(AirwallexRuby.api_url).tap do |uri| 
-          uri.path += "#{ENDPOINT}/#{customer_id}/generate_client_secret" 
+          uri.path += "#{ENDPOINT}/#{payment_method_id}/disable" 
         end
 
-        response = get(request_url, {}, options)
+        response = post(request_url, payment_method_data, options)
         response_body = JSON.parse(response.body).deep_symbolize_keys
         new(response_body)
       end
