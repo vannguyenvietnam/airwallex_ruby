@@ -71,8 +71,7 @@ module AirwallexRuby
         end
 
         response = get(request_url, {}, options)
-        response_body = JSON.parse(response.body).deep_symbolize_keys
-        new(response_body)
+        JSON.parse(response.body).deep_symbolize_keys
       end
 
       # Update a Customer using the API.
