@@ -64,7 +64,7 @@ module AirwallexRuby
       # Generate client secret for a customer for activation using the API.
       #
       # @param [String] customer_id the Customer Id
-      # @return [AirwallexRuby::Customer]
+      # @return [JSON::Hash]
       def self.generate_client_secret(customer_id, options = {})
         request_url = URI.parse(AirwallexRuby.api_url).tap do |uri| 
           uri.path += "#{ENDPOINT}/#{customer_id}/generate_client_secret" 
@@ -80,7 +80,7 @@ module AirwallexRuby
       # @return [AirwallexRuby::Customer]
       def update(customer_data, options = {})
         attributes = self.class.attributes - [:id]
-        request_body = self.class.parse_body_for_request(attributes, account_data)
+        request_body = self.class.parse_body_for_request(attributes, customer_data)
         request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += "#{ENDPOINT}/#{id}/update" }
         response = self.class.post(request_url, request_body, options)
         response_body = JSON.parse(response.body).deep_symbolize_keys

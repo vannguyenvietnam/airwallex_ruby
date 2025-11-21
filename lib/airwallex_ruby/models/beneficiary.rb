@@ -26,12 +26,12 @@ module AirwallexRuby
       # @param [Hash] beneficiary_data
       # @option beneficiary_data [Hash] :beneficiary *required*
       # @option beneficiary_data [Hash] :transfer_methods *required*
-      # @return [AirwallexRuby::Beneficiary]
+      # @return [TrueClass, FalseClass]
       def self.validate(beneficiary_data, options = {})
         attributes = self.attributes - [:id] # fix attributes allowed by POST API
         request_body = parse_body_for_request(attributes, beneficiary_data)
         request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += "#{ENDPOINT}/validate" }
-        response = post(request_url, request_body, options.merge(no_response_body: true))
+        response = post(request_url, request_body, options.merge(raw_response: true))
         response.code.to_s == '200'
       end
 

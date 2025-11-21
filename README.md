@@ -7,7 +7,7 @@ Ruby interface to the https://home.airwallex.com/ API.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'airwallex_ruby'
+gem 'airwallex_ruby', github: 'vannguyenvietnam/airwallex_ruby', tag: '[VERSION]'
 ```
 
 And then execute:
@@ -38,4 +38,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the AirwallexRuby project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/airwallex_ruby/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the AirwallexRuby project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/vannguyenvietnam/airwallex_ruby/blob/master/CODE_OF_CONDUCT.md).

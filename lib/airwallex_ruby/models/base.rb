@@ -48,11 +48,11 @@ module AirwallexRuby
       end
 
       def self.init_http_header(http, options = {})
-        http["Content-Type"] = "application/json"
-        http["Accept"] = "application/json"
-
         if options[:file]
           http["Content-Type"] = "multipart/form-data"
+        else
+          http["Content-Type"] = "application/json"
+          http["Accept"] = "application/json"
         end
 
         if options[:use_client_id]
@@ -81,7 +81,7 @@ module AirwallexRuby
         )
         
         puts response.body
-        return response if response.body.blank? || options[:no_response_body]
+        return response if response.body.blank? || options[:raw_response]
 
         begin
           response_body = JSON.parse(response.body)
