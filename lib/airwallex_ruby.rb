@@ -36,6 +36,7 @@ require "airwallex_ruby/models/payment_method"
 require "airwallex_ruby/models/funds_split"
 require "airwallex_ruby/models/funds_split_reversal"
 require "airwallex_ruby/models/refund"
+require "airwallex_ruby/models/settlement_record"
 # Finance Models
 require "airwallex_ruby/models/financial_report"
 require "airwallex_ruby/models/financial_transaction"
