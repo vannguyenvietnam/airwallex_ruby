@@ -41,6 +41,7 @@ module AirwallexRuby
       # @options [String] :from_created_at - The start time of created_at in ISO8601 format.
       # @options [String] :merchant_trigger_reason - One of scheduled, unscheduled
       # @options [String] :next_triggered_by - One of merchant, customer.
+      # @options [String] :payment_method_id - The unique identifier of a PaymentMethod
       # @options [String] :status - Status of PaymentConsent
       # @options [String] :to_created_at - The end time of created_at in ISO8601 format
       # @options [Integer] :page_num - Page number starting from 0.
