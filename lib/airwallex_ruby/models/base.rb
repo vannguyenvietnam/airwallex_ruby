@@ -63,6 +63,13 @@ module AirwallexRuby
         end
         
         http["x-on-behalf-of"] = options[:on_behalf_of] if options[:on_behalf_of]
+
+        if options[:header].is_a?(Hash)
+          options[:header].each do |key, value|
+            http[key] = value
+          end
+        end
+
         # Return
         http
       end
