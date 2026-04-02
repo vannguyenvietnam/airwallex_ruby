@@ -54,6 +54,54 @@ module AirwallexRuby
         response_body = JSON.parse(response.body).deep_symbolize_keys
         new(response_body)
       end
+
+      # Begin::Simulation APIs
+      # Uses the API to create a RFI.
+      #
+      # @param [Hash] rfi_data
+      # @option rfi_data [Array<Hash>] :questions *required*
+      # @option rfi_data [String] :type *required*
+      # @return [AirwallexRuby::RequestForInformation]
+      def self.create(rfi_data, options = {})
+        attributes = self.attributes - [:id] # fix attributes allowed by POST API
+        request_body = parse_body_for_request(attributes, rfi_data)
+        request_url = URI.parse(AirwallexRuby.simulation_api_url).tap { |uri| uri.path += "#{ENDPOINT}/create" }
+        response = post(request_url, request_body, options)
+        response_body = JSON.parse(response.body).deep_symbolize_keys
+        new(response_body)
+      end
+
+      # Follow up on a Request For Information using the API.
+      #
+      # @param [String] rfi_id the Request For Information Id
+      # @param [Array<Hash>] follow_up_data the follow-up data for the Request For Information
+      # @return [AirwallexRuby::RequestForInformation]
+      def self.follow_up(rfi_id, follow_up_data, options = {})
+        request_url = URI.parse(AirwallexRuby.simulation_api_url).tap do |uri| 
+          uri.path += "#{ENDPOINT}/#{rfi_id}/follow_up" 
+        end
+
+        response = post(request_url, follow_up_data, options)
+        response_body = JSON.parse(response.body).deep_symbolize_keys
+        new(response_body)
+      end
+
+      # Closes a Request For Information using the API.
+      #
+      # @param [String] rfi_id the Request For Information Id
+      # @return [AirwallexRuby::RequestForInformation]
+      def self.close(rfi_id, options = {})
+        request_url = URI.parse(AirwallexRuby.simulation_api_url).tap do |uri| 
+          uri.path += "#{ENDPOINT}/#{rfi_id}/close" 
+        end
+
+        response = post(request_url, {}, options)
+        response_body = JSON.parse(response.body).deep_symbolize_keys
+        new(response_body)
+      end
+      # End::Simulation APIs
+
+      # End of Request for Information class
     end
   end
 end
