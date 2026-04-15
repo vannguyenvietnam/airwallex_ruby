@@ -93,10 +93,10 @@ module AirwallexRuby
         begin
           response_body = JSON.parse(response.body)
         rescue JSON::ParserError => e
-          raise Error::InvalidResponse.new(e.message)
+          raise Error::InvalidResponse.create(e.message)
         end
 
-        raise Error.new(response_body) unless response_body.is_a?(Hash) || response_body.is_a?(Array)
+        raise Error.create(response_body) unless response_body.is_a?(Hash) || response_body.is_a?(Array)
 
         if response_body.is_a?(Hash) && response_body['message'].is_a?(Array)
           message = response_body['message'].first

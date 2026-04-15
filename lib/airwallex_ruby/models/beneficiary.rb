@@ -32,7 +32,8 @@ module AirwallexRuby
         request_body = parse_body_for_request(attributes, beneficiary_data)
         request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += "#{ENDPOINT}/validate" }
         response = post(request_url, request_body, options.merge(raw_response: true))
-        response.code.to_s == '200'
+        return true if response.code.to_s == '200'
+        raise Error.create("Beneficiary validation failed with status code #{response.code}", response.body)
       end
 
       # Update a beneficiary using the API.
