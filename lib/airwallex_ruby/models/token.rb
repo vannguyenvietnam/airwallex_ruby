@@ -8,9 +8,9 @@ module AirwallexRuby
       # Uses the API to obtain a token.
       #
       # @return [AirwallexRuby::Token]
-      def self.fetch_token
+      def self.fetch_token(options = {})
         request_url = URI.parse(AirwallexRuby.api_url).tap { |uri| uri.path += "#{ENDPOINT}/login" }
-        response = post(request_url, {}, use_client_id: true)
+        response = post(request_url, {}, use_client_id: true, login_as: options[:login_as])
         response_body = JSON.parse(response.body)
         new(response_body)
       end

@@ -58,6 +58,7 @@ module AirwallexRuby
         if options[:use_client_id]
           http["x-client-id"] = AirwallexRuby.client_id
           http["x-api-key"] = AirwallexRuby.api_key
+          http["x-login-as"] = options[:login_as] if options[:login_as]
         else
           http["Authorization"] = "Bearer #{AirwallexRuby.access_token}"
         end
