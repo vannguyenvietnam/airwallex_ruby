@@ -3,15 +3,15 @@ module AirwallexRuby
     attr_reader :error
     attr_reader :response_body
 
-    def initialize(options = {})
-      @error = options[:error]
+    def initialize(message, options = {})
+      @error = message
       @response_body = options[:response_body]
-      super(options.to_json)
+      super(message)
     end
 
     def self.create description, response_body = nil
-      attrs = { error: description, response_body: response_body }
-      new(attrs)
+      request_options = { response_body: response_body }
+      new(description, request_options)
     end
 
     def message
